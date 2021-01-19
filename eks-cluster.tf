@@ -1,3 +1,15 @@
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "geekzone"
+
+    workspaces {
+     name = "kubernetes"
+    }
+  }
+} 
+
+
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
