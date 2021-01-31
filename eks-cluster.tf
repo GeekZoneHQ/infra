@@ -4,7 +4,7 @@ terraform {
     organization = "geekzone"
 
     workspaces {
-     name = "kubernetes"
+     name = "dev"
     }
   }
 } 
