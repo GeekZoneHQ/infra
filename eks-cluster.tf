@@ -1,4 +1,4 @@
-terraform {
+/* terraform {
   backend "remote" {
     hostname = "app.terraform.io"
     organization = "geekzone"
@@ -7,7 +7,7 @@ terraform {
      name = "dev"
     }
   }
-} 
+} */
 
 
 module "eks" {
