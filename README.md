@@ -1,121 +1,21 @@
-# Provision an EKS Cluster using Terraform
+# Geek.Zone's EKS Cluster
 
-This repo will guide and show you how to deploy an EKS cluster by using Terraform, an open-source infrastructure as code (IaC) software tool. Thanks to the use of configuration files where the infrastructure is codified, Terraform allows building, changing, and versioning infrastructure safely and efficiently.
+This repo will guide and show you how to deploy and/or maintain the infrastructure that hosts the Geek.Zone Web App. It consists of an EKS cluster provisioned by using Terraform, an open-source infrastructure as code (IaC) software tool. Thanks to the use of declarative configuration files, where the desired state of the infrastructure is codified, Terraform allows building, changing, and versioning infrastructure in a safe, consistent and efficient way.
+Terraform keeps track of resources by recording them in a file called terraform.tfstate, which can either be stored locally or remotely. If the terraform.tfstate is hosted remotely, Terraform can also interact with preconfigured Version Control Systems, such as Github. 
 
-In order to provision the cluster you will need to install 
+There are 4 main commands to manage infrastructure with Terraform:
+- "terraform init", which initializes the workfolder, the directory where the configuration files reside.
+- "terraform plan", which compares the configuration files with the existing resources, if any, and shows what resouces would need to be created and/or destroyed
+- "terraform apply", to create or destroy resources according to the configuration files. This command is normally run after "terraform plan", but can be run straight after "terraform init" as well.
+- "terraform destroy", to destroy the infrastructure created and managed by Terraform. 
 
-Install the Terraform CLI and  AWS CLI. 
-Configure the AWS CLI to use your credentials.
+In order to provision Geek.Zone's EKS cluster you will need to install the Terraform CLI (https://learn.hashicorp.com/tutorials/terraform/install-cli), the  AWS CLI v2 (https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) and kubectl (https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
-```shell
-$ aws configure
-AWS Access Key ID [None]: <YOUR_AWS_ACCESS_KEY_ID>
-AWS Secret Access Key [None]: <YOUR_AWS_SECRET_ACCESS_KEY>
-Default region name [None]: <YOUR_AWS_REGION>
-Default output format [None]: json
-```
+# Deploying the cluster
 
-This enables Terraform access to the configuration file and performs operations on your behalf with these security credentials.
-
-After you've done this, initalize your Terraform workspace, which will download 
-the provider and initialize it with the values provided in the `terraform.tfvars` file.
-
-```shell
-$ terraform init
-Initializing modules...
-Downloading terraform-aws-modules/eks/aws 9.0.0 for eks...
-- eks in .terraform/modules/eks/terraform-aws-modules-terraform-aws-eks-908c656
-- eks.node_groups in .terraform/modules/eks/terraform-aws-modules-terraform-aws-eks-908c656/modules/node_groups
-Downloading terraform-aws-modules/vpc/aws 2.6.0 for vpc...
-- vpc in .terraform/modules/vpc/terraform-aws-modules-terraform-aws-vpc-4b28d3d
-
-Initializing the backend...
-
-Initializing provider plugins...
-- Checking for available provider plugins...
-- Downloading plugin for provider "template" (hashicorp/template) 2.1.2...
-- Downloading plugin for provider "kubernetes" (hashicorp/kubernetes) 1.10.0...
-- Downloading plugin for provider "aws" (hashicorp/aws) 2.52.0...
-- Downloading plugin for provider "random" (hashicorp/random) 2.2.1...
-- Downloading plugin for provider "local" (hashicorp/local) 1.4.0...
-- Downloading plugin for provider "null" (hashicorp/null) 2.1.2...
-
-Terraform has been successfully initialized!
-```
-
-Then, provision your EKS cluster by running `terraform apply`. This will 
-take approximately 10 minutes.
-
-```shell
-$ terraform apply
-
-# Output truncated...
-
-Plan: 51 to add, 0 to change, 0 to destroy.
-
-Do you want to perform these actions?
-  Terraform will perform the actions described above.
-  Only 'yes' will be accepted to approve.
-
-# Output truncated...
-
-Apply complete! Resources: 51 added, 0 changed, 0 destroyed.
-
-Outputs:
-
-cluster_endpoint = https://A1ADBDD0AE833267869C6ED0476D6B41.gr7.us-east-2.eks.amazonaws.com
-cluster_security_group_id = sg-084ecbab456328732
-kubectl_config = apiVersion: v1
-preferences: {}
-kind: Config
-
-clusters:
-- cluster:
-    server: https://A1ADBDD0AE833267869C6ED0476D6B41.gr7.us-east-2.eks.amazonaws.com
-    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01ETXdPVEU0TXpVeU1sb1hEVE13TURNd056RTRNelV5TWxvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTThkClZaN1lmbjZmWm41MEgwL0d1Qi9lRmVud2dydXQxQlJWd29nL1JXdFpNdkZaeStES0FlaG5lYnR5eHJ2VVZWMXkKTXVxelBiMzgwR3Vla3BTVnNTcDJVR0ptZ2N5UVBWVi9VYVZDQUpDaDZNYmIvL3U1bWFMUmVOZTBnb3VuMWlLbgpoalJBYlBJM2JvLzFPaGFuSXV1ejF4bmpDYVBvWlE1U2N5MklwNnlGZTlNbHZYQmJ6VGpESzdtK2VST2VpZUJWCjJQMGd0QXJ3alV1N2MrSmp6OVdvcGxCcTlHZ1RuNkRqT1laRHVHSHFRNEpDUnRsRjZBQXpTUVZ0cy9aRXBnMncKb2NHakd5ZE9pSmpMb1NsYU9weDIrMTNMbHcxMDAvNmY4Q0F2ajRIbFZUZDBQOW5rN1UyK04xNSt5VjRpNjFoQgp3bHl4SXFUWEhDR0JvYmRNNE5VQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFIbEI3bGVMTnJYRXZnNksvNUdtR2s5Tlh4SUkKRDd0Y1dkTklBdnFka1hWK3ltVkxpTXV2ZGpQVjVKV3pBbEozTWJqYjhjcmlQWWxnVk1JNFJwc0N0aGJnajMzMwpVWTNESnNxSmZPUUZkUnkvUTlBbHRTQlBqQldwbEtaZGc2dklxS0R0eHB5bHovOE1BZ1RldjJ6Zm9SdzE4ZnhCCkI2QnNUSktxVGZCNCtyZytVcS9ULzBVS1VXS0R5K2gyUFVPTEY2dFVZSXhXM2RncWh0YWV3MGJnQmZyV3ZvSW8KYitSOVFDTk42UHRQNEFFQSsyQnJYYzhFTmd1M2EvNG9rN3lPMjZhTGJLdC9sbUNoNWVBOEdBRGJycHlWb3ZjVgpuTGdyb0FvRnVRMCtzYjNCTThUcEtxK0YwZ2dwSFptL3ZFNjh5NUk1VFlmUUdHeEZ6VEVyOHR5NHk1az0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
-  name: eks_training-eks-TNajBRIF
-
-contexts:
-- context:
-    cluster: eks_training-eks-TNajBRIF
-    user: eks_training-eks-TNajBRIF
-  name: eks_training-eks-TNajBRIF
-
-current-context: eks_training-eks-TNajBRIF
-
-users:
-- name: eks_training-eks-TNajBRIF
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1alpha1
-      command: aws-iam-authenticator
-      args:
-        - "token"
-        - "-i"
-        - "training-eks-TNajBRIF"
-
-
-
-region = eu-west-2
-```
-
-## Configure kubectl
-
-To configure kubetcl, you need both [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and [AWS IAM Authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html). You only need the AWS IAM Authenticator if your installed AWS CLI is older than release 1.16.156. 
-Otherwise you can simply run the below commnand to get the access credentials for your cluster and automatically configure `kubectl`.
-
-```shell
-$ aws eks --region $(terraform output region) update-kubeconfig --name $(terraform output cluster_name)
-```
-
-The
-[Kubernetes cluster name](https://github.com/hashicorp/learn-terraform-eks/blob/master/outputs.tf#L26)
-and [region](https://github.com/hashicorp/learn-terraform-eks/blob/master/outputs.tf#L21)
- correspond to the output variables showed after the successful Terraform run.
-
-You can view these outputs again by running:
-
-```shell
-$ terraform output
-```
-
+1. Configure the AWS CLI to use your credentials by running "aws configure" and passing a value for each key. Alternatively the AWS credentials can be passed in the remote workspace, if the terraform.tfstate is stored remotely in Terraform cloud.
+2. Initialize the working directory by running "terraform init". Make sure your terminal is open in that directory.
+3. Provision the EKS cluster by running "terraform apply". This will take approximately 10 minutes. Once the command is executed, the outputs will be displayed on the screen.
+4. Configure kubectl with the context of the newly deployed EKS cluster by running "aws eks --region $(terraform output region) update-kubeconfig --name $(terraform output cluster_name)". The kubernetes cluster name and region correspond to the output variables showed after the successful Terraform run. You can view these outputs again by running the command "terraform output".
+5. Deploy in the newly created EKS cluster the Geek.Zone web app microservices, along with the storage, networking, security, logging and monitoring components. To do this run the command "kubectl apply -f resorce-definitions/".
+You can then run "kubectl get all --all-namespaces" to check the status of all the resources in the EKS cluster.
