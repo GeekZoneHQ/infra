@@ -1,8 +1,3 @@
-variable "region" {
-  default     = "eu-west-2"
-  description = "AWS region"
-}
-
 provider "aws" {
   region = "eu-west-2"
 }
@@ -10,14 +5,14 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "GeekZone-dev"
+  cluster_name = "GeekZoneCluster"
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.6.0"
+  version = "2.66.0"
 
-  name                 = "GeekZoneVPC-dev"
+  name                 = "GeekZoneVPC"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
