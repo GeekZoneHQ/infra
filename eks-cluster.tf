@@ -17,7 +17,7 @@ module "eks" {
   subnets         = module.vpc.private_subnets
 
   tags = {
-    Environment = "test"
+    environment = "dev"
   }
 
   vpc_id = module.vpc.vpc_id
@@ -27,7 +27,9 @@ module "eks" {
       name                          = "worker-group-1"
       instance_type                 = "t3.medium"
       additional_userdata           = "echo foo bar"
-      asg_desired_capacity          = "3"
+      asg_min_size                  = "2"
+      asg_max_size                  = "3"
+#     asg_desired_capacity          = "2"
       root_volume_type              = "gp2"
       root_volume_size              = "8"
       availability_zones            = "data.aws_availability_zones.available.names"
