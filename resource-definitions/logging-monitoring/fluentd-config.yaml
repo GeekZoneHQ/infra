@@ -144,6 +144,17 @@ data:
       max_lines 1000
     </match>
 
+    <source>
+      @type tail
+      path /var/lib/docker/containers/
+      tag sample.tag
+      <parse>
+        @type multiline
+        format_firstline /\d{4}-\d{1,2}-\d{1,2}/
+        format1 /(?<timestamp>[^ ]* [^ ]*) (?<level>[^\s]+:)(?<message>[\s\S]*)/
+      </parse>
+    </source>
+
   system.input.conf: |-
     # Example:
     # 2015-12-21 23:17:22,066 [salt.state       ][INFO    ] Completed state [net.ipv4.ip_forward] at time 23:17:22.066081
