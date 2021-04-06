@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: django-backend
-        image: 098281131088.dkr.ecr.eu-west-2.amazonaws.com/gz-web-django:1.0
+        image: giuntalio/django-app:1.0 
         env:
           - name: DEBUG
             value: "on"
@@ -47,7 +47,7 @@ kind: Service
 metadata:
   name: gz-web-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP 
   selector:
     app: gz-web
   ports:

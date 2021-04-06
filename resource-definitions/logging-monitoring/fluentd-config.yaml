@@ -155,6 +155,18 @@ data:
       </parse>
     </source>
 
+
+    <source>
+      @type tail
+      path /usr/src/app/debug.log
+      tag sample.tag
+      <parse>
+        @type multiline
+        format_firstline /\d{4}-\d{1,2}-\d{1,2}/
+        format1 /(?<timestamp>[^ ]* [^ ]*) (?<level>[^\s]+:)(?<message>[\s\S]*)/
+      </parse>
+    </source>
+
   system.input.conf: |-
     # Example:
     # 2015-12-21 23:17:22,066 [salt.state       ][INFO    ] Completed state [net.ipv4.ip_forward] at time 23:17:22.066081

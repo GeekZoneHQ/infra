@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-logging
+  namespace: kube-system
+spec:
+  rules: 
+    - host: logging.geek.zone
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: kibana-logging 
+              servicePort: 5601
+

@@ -28,10 +28,10 @@ module "eks" {
       instance_type                 = "t3.medium"
       additional_userdata           = "echo foo bar"
       asg_min_size                  = "2"
-      asg_max_size                  = "3"
-#     asg_desired_capacity          = "2"
+      asg_max_size                  = "4"
+      asg_desired_capacity          = "2"
       root_volume_type              = "gp2"
-      root_volume_size              = "8"
+      root_volume_size              = "20"
       availability_zones            = "data.aws_availability_zones.available.names"
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]      
     },

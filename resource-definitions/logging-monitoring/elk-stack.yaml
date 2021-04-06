@@ -251,7 +251,7 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 31Gi
+          storage: 8Gi
 ---
 
 #
@@ -311,7 +311,7 @@ spec:
   ports:
   - port: 5601
     protocol: TCP
-    targetPort: ui
+    targetPort: 5601 
   selector:
     k8s-app: kibana-logging
-  type: LoadBalancer
+  type: ClusterIP 
