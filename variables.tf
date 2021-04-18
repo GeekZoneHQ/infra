@@ -20,3 +20,7 @@ variable "map_users" {
   ]
 } 
 
+variable "db_name" {}     #Database name
+variable "db_username" {} #Database username
+variable "db_password" {} #Database password
+variable "db_port" {}     #Database port

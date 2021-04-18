@@ -16,14 +16,32 @@ spec:
     spec:
       containers:
       - name: django-backend
-        image: giuntalio/django-app:1.0 
+        image: geekzone/web:django-backend-1.0
         env:
           - name: DEBUG
             value: "on"
           - name: ALLOWED_HOSTS
             value: test.geek.zone 
-          - name: DATABASE_URL
-            value: sqlite:/db.sqlite
+          - name: DATABASE_HOST
+            value: "geekzone.cqedj3rbwgfi.eu-west-2.rds.amazonaws.com"
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_NAME
+            value: "geekzone"
+          - name: DATABASE_USER
+            value: "postgres"       
+          - name: DATABASE_PASSWORD
+            value: "Q#4fkZ9$9SPvgVB27q3U"
+          - name: STRIPE_SECRET_KEY
+            value: sk_test_51H10VbJh8KDe9GPFIV2e5f3H7wq21bzdvCB12CznS92vbOavET4ALTsQgNgP0Meb9VSMDuhPc1DhEu4pRw9bs0Sd00iujiazxX
+          - name: STRIPE_PUBLIC_KEY
+            value: pk_test_51H10VbJh8KDe9GPFDGNmzIaTucxVDOKrYzc5D4zYCc4jBwv5xvnqmy5bo5idDj7hvTUcz4F3hmVTZjAWIGGjCtTU007JH64zdv
+          - name: PRICE_ID
+            value: price_1HDveaJh8KDe9GPFiya9gKoZ
+          - name: DONATION_PRODUCT_ID
+            value: prod_HnmOmrwV7zDBfw
+          - name: GMAIL_APP_PASSWORD
+            value: vjegcyfixjtfpnim
         resources:
           limits:
             memory: "100Mi"
@@ -32,7 +50,7 @@ spec:
             memory: "50Mi"
             cpu: 30m
       - name: nginx-proxy
-        image: 098281131088.dkr.ecr.eu-west-2.amazonaws.com/gz-nginx-proxy:1.0
+        image: geekzone/web:nginx-proxy 
         resources:
           limits:
             memory: "50Mi"
@@ -52,4 +70,4 @@ spec:
     app: gz-web
   ports:
   - port: 80
-    targetPort: 80
+    targetPort: 8080
