@@ -17,5 +17,16 @@ In order to provision Geek.Zone's EKS cluster you will need to install the Terra
 2. Initialize the working directory by running "terraform init". Make sure your terminal is open in that directory.
 3. Provision the EKS cluster by running "terraform apply". This will take approximately 10 minutes. Once the command is executed, the outputs will be displayed on the screen.
 4. Configure kubectl with the context of the newly deployed EKS cluster by running "aws eks --region $(terraform output region) update-kubeconfig --name $(terraform output cluster_name)". The kubernetes cluster name and region correspond to the output variables showed after the successful Terraform run. You can view these outputs again by running the command "terraform output".
-5. Deploy in the newly created EKS cluster the Geek.Zone web app microservices, along with the storage, networking, security, logging and monitoring components. To do this run the command "kubectl apply -f resorce-definitions/".
-You can then run "kubectl get all --all-namespaces" to check the status of all the resources in the EKS cluster. Once the ingress-controller has been deployed, copy and paste the DNS name of the load balancer (that gets created along with the controller) into the target field of the CNAME records for logging, monitoring and test.geek.zone in Cloudflair.
+5. Deploy in the newly created EKS cluster the Geek.Zone web app microservices, along with the storage, networking, security, logging and monitoring components. To do this run the following commands:
+- "kubectl apply -f k8s/namespaces.yaml"
+- "kubectl apply -f k8s/storage-class-aws.yaml"
+- "kubectl apply -f k8s/ingress-nginx"
+- "kubectl apply -f k8s/logging"
+- "kubectl apply -f k8s/metrics"
+- "kubectl apply -f k8s/monitoring"
+- "kubectl apply -f k8s/rabbitmq"
+- "kubectl apply -f k8s/web"
+You can then run "kubectl get all --all-namespaces" to check the status of all the resources in the EKS cluster. Once the ingress-controller has been deployed, copy and paste the DNS name of the load balancer (that gets created along with the controller) into the target field of the CNAME records for logging, monitoring, rabbitmq and test.geek.zone in Cloudflair.
+
+To delete all the resources deployed in the EKS cluster, just run the following command:
+- "kubectl delete -f k8s/namespaces"
