@@ -9,12 +9,23 @@ terraform {
   }
 }
 
+resource "aws_kms_key" "eks" {
+  description = "EKS Secret Encryption Key"
+}
+
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
   cluster_version = "1.18"
   map_users       = var.map_users
   subnets         = module.vpc.private_subnets
+
+  cluster_encryption_config = [
+    {
+      provider_key_arn = aws_kms_key.eks.arn
+      resources        = ["secrets"]
+    }
+  ]
 
   tags = {
     environment = "dev"

@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-rabbitmq-mgmt
+  namespace: rabbitmq-system
+  annotations:
+#    nginx.ingress.kubernetes.io/app-root: /memberships/register 
+#    nginx.ingress.kubernetes.io/default-backend: nginx-custom-default-backend 
+#    nginx.ingress.kubernetes.io/custom-http-errors: "404,415"
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules: 
+    - host: rabbitmq.geek.zone
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: geek-zone-cluster
+              servicePort: 15672
