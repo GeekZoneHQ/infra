@@ -7,17 +7,18 @@ spec:
   replicas: 1
   resources:
     requests:
-      cpu: 1 
-      memory: 2Gi
+      cpu: 200m 
+      memory: 350Mi
     limits:
-      cpu: 1
-      memory: 2Gi
+      cpu: 200m
+      memory: 350Mi
   rabbitmq:
     additionalConfig: |
       cluster_partition_handling = pause_minority
       vm_memory_high_watermark_paging_ratio = 0.99
-      disk_free_limit.relative = 1.0
+      disk_free_limit.absolute = 2GB
       collect_statistics_interval = 10000
+      log.file.level = info
   persistence:
     storageClassName: ssd
     storage: "10Gi"
