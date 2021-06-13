@@ -17,20 +17,20 @@ spec:
     spec:
       initContainers:
       - name: wait-for-migration
-        image: geekzone/web:1.3
+        image: geekzone/backend:0.1.957
         command: ['python3', 'manage.py', 'migrate']
         envFrom:
           - secretRef:
               name: web-secrets
       - name: wait-for-database
-        image: geekzone/web:1.3
+        image: geekzone/backend:0.1.957
         command: ['python3', 'manage.py', 'wait_for_database']
         envFrom:
           - secretRef:
               name: web-secrets 
       containers:
       - name: django-backend
-        image: geekzone/web:1.3
+        image: geekzone/backend:0.1.957
         envFrom:
           - secretRef:
               name: web-secrets
@@ -41,8 +41,8 @@ spec:
           requests:
             memory: "50Mi"
             cpu: 30m
-      - name: nginx-proxy
-        image: geekzone/nginx:1.3
+      - name: frontend-proxy
+        image: geekzone/frontend:0.1.957
         ports:
         - containerPort: 8080
           protocol: TCP
