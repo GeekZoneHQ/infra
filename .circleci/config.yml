@@ -1,6 +1,6 @@
 version: '2.1'
 orbs:
-  terraform: circleci/terraform@x.y.z
+  terraform: circleci/terraform@2.1.0
 jobs:
   single-job-lifecycle:
     executor: terraform/default
