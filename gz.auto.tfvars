@@ -1,2 +1,2 @@
-db_name     = "geekzone"
+db_name     = "testgeekzone"
 db_port     = 5432

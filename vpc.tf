@@ -5,11 +5,11 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "GeekZoneCluster"
-  db_name      = "geekzone"
+  cluster_name = "Test-GZ-Cluster"
+  db_name      = "testgeekzone"
   region       = var.region
   tags         = {
-    Environment = "dev"
+    Environment = "test"
   }
 }
 
@@ -17,7 +17,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.66.0"
 
-  name                 = "GeekZoneVPC"
+  name                 = "TestGZ-VPC"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
@@ -44,6 +44,6 @@ module "vpc" {
   }
 
   database_subnet_tags   = {
-    "local.cluster_name" = "django-backend"
+    "local.cluster_name" = "test-django-backend"
   }
 }
