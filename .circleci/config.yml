@@ -74,7 +74,9 @@ jobs:
       - run:
           name: Terraform Destroy
           command: |
-            terraform init
+            terraform init -backend=true
+            backend_config_file: backend.hcl
+            path: .
             terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
             terraform destroy --auto-approve
 
