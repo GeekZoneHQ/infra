@@ -5,7 +5,7 @@ orbs:
 executors:
   terraform-executor:
     docker:
-      - image: hashicorp/terraform:0.14.3
+      - image: hashicorp/default
     working_directory: ~/src      
 
 aliases:
@@ -22,7 +22,6 @@ jobs:
       - *show-current-branch-name
       - run:
           command: >-
-            export TERRAFORM_TOKEN="zpfGc6Vmc2O6Rw.atlasv1.1fyzb6aFukG82TsOcPAf7SOAyybjWuL9TT0cgiJTEOEuCSQxQxjch1luudDflkJD2RY"
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
@@ -34,7 +33,6 @@ jobs:
       - *show-current-branch-name
       - run:
           command: >-
-            export TERRAFORM_TOKEN="zpfGc6Vmc2O6Rw.atlasv1.1fyzb6aFukG82TsOcPAf7SOAyybjWuL9TT0cgiJTEOEuCSQxQxjch1luudDflkJD2RY"
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
