@@ -81,7 +81,8 @@ jobs:
 
 
 workflows:
-  deploy_test_infra:
+  #deploy_test_infra:
+  test:
     jobs:
       - build_init
       - terraform-validate:
