@@ -1,38 +1,113 @@
-version: '2.1'
+version: 2.1
 orbs:
   terraform: circleci/terraform@2.1.0
+
+executors:
+  terraform-executor:
+    docker:
+      - image: hashicorp/terraform:0.14.3
+    working_directory: ~/src      
+
+aliases:
+  - &show-current-branch-name
+    run:
+      name: Show current branch
+      command: echo ${CIRCLE_BRANCH}
+      
 jobs:
-  single-job-lifecycle:
-    executor: terraform/default
+  build_init:
+    executor: terraform-executor
     steps:
       - checkout
+      - *show-current-branch-name
       - run:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
-      - terraform/install:
-          arch: amd64
-          os: linux
-          terraform_version: 0.14.2
-      - terraform/fmt:
-          path: .
-      - terraform/validate:
-          path: .
-      - terraform/init:
-          backend: true
-          backend_config_file: backend.hcl
-          path: .
-      - terraform/plan:
-          backend_config_file: backend.hcl
-          path: .
-      - terraform/apply:
-          backend_config_file: backend.hcl
-          path: .
-      - terraform/destroy:
-          path: .
-    working_directory: ~/src
+
+  terraform-validate:
+    executor: Terraform-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - run:
+          name: Terraform Validate & Format
+          command: |
+            terraform init -backend=true
+            backend_config_file: backend.hcl
+            path: .
+            terraform validate
+            terraform fmt -check                    
+            
+
+  terraform-plan-and-apply:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./
+      - *show-current-branch-name
+      - run:
+          name: Terraform Plan
+          command: |            
+            terraform init -backend=true
+            backend_config_file: backend.hcl
+            path: .
+            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            terraform plan
+
+      - run:
+          name: Terraform Apply
+          command: |
+            terraform init -backend=true
+            backend_config_file: backend.hcl
+            path: .
+            terraform workspace select ${CIRCLE_BRANCH}
+            terraform apply --auto-approve
+            
+ terraform-destroy:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - run:
+          name: Terraform Destroy
+          command: |
+            terraform init
+            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            terraform destroy --auto-approve
+
+
+
 workflows:
-  single-job-lifecycle:
+  deploy_test_infra:
     jobs:
-      - single-job-lifecycle
+      - build_init
+      - terraform-validate:
+          filters:
+            branches:
+              only:
+                - test-infra
+                - test_prod_infra
+      - terraform-plan-and-apply:
+          requires:
+            - terraform-validate
+          filters:
+            branches:
+              only:
+                - test-infra
+                - test_prod_infra
+      - hold:
+          type: approval
+          requires:
+            - terraform-plan-and-apply
+      - terraform-destroy:
+          requires:
+            - hold
+          filters:
+            branches:
+              only:
+                - test-infra
+                - test_prod_infra
+
