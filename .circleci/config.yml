@@ -22,8 +22,9 @@ jobs:
       - *show-current-branch-name
       - run:
           command: >-
+            export TERRAFORM_TOKEN="zpfGc6Vmc2O6Rw.atlasv1.1fyzb6aFukG82TsOcPAf7SOAyybjWuL9TT0cgiJTEOEuCSQxQxjch1luudDflkJD2RY"
             echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraform.d
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
 
   terraform-validate:
@@ -33,8 +34,9 @@ jobs:
       - *show-current-branch-name
       - run:
           command: >-
+            export TERRAFORM_TOKEN="zpfGc6Vmc2O6Rw.atlasv1.1fyzb6aFukG82TsOcPAf7SOAyybjWuL9TT0cgiJTEOEuCSQxQxjch1luudDflkJD2RY"
             echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraform.d
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
 
       - run:
