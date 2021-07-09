@@ -23,7 +23,7 @@ jobs:
       - run:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraform.d
           name: Create .terraformrc file locally
 
   terraform-validate:
@@ -34,12 +34,12 @@ jobs:
       - run:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraform.d
           name: Create .terraformrc file locally
-                
+
       - run:
           name: Terraform Validate & Format
-          command: |
+          command: |            
             terraform init -backend=true
             backend_config_file: backend.hcl
             path: .
