@@ -32,12 +32,6 @@ jobs:
       - checkout
       - *show-current-branch-name
       - run:
-          command: >-
-            echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-          name: Create .terraformrc file locally
-
-      - run:
           name: Terraform Validate & Format
           command: |            
             terraform init -backend=true
