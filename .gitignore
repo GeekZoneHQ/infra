@@ -27,7 +27,7 @@ override.tf.json
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
-
+# added a line
 #Include secrets to prevent from sending to remote repository
 k8s/web/web-secrets.yaml
 k8s/celery/celery-secrets.yaml
