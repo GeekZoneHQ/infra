@@ -27,7 +27,7 @@ jobs:
           name: Create .terraformrc file locally
 
   terraform-validate:
-    executor: Terraform-executor
+    executor: terraform-executor
     steps:
       - checkout
       - *show-current-branch-name
@@ -66,7 +66,7 @@ jobs:
             terraform workspace select ${CIRCLE_BRANCH}
             terraform apply --auto-approve
             
- terraform-destroy:
+  terraform-destroy:
     executor: terraform-executor
     steps:
       - checkout
