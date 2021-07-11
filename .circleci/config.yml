@@ -23,11 +23,11 @@ jobs:
     steps:
       - checkout
       - *show-current-branch-name
-      - run:
-          command: >-
-            echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-          name: Create .terraformrc file locally
+      # - run:
+      #     command: >-
+      #       echo "credentials \"app.terraform.io\" {token =
+      #       \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+      #     name: Create .terraformrc file locally
 
   terraform-validate:
     executor: terraform-executor
