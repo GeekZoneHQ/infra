@@ -130,6 +130,26 @@ provider "registry.terraform.io/hashicorp/template" {
   ]
 }
 
+provider "registry.terraform.io/hashicorp/tfe" {
+  version     = "0.14.1"
+  constraints = "~> 0.14.0"
+  hashes = [
+    "h1:rlTSZzM1KDCXmX78+xJsQtrcD6ePvH0s+WQ4ylEcwuE=",
+    "zh:078489eafce98d3361710a4798408830fed7c152e9288de2ed786c9fc711aacc",
+    "zh:2e7c2c48adfd6e1e1002e85f21e0610ac56434dc8694771432f0a0cd8f4cd9f8",
+    "zh:2eefe0581c6676736a4746a6c3beb6e440c7305dfd880f465cb21e59a56d17e7",
+    "zh:31c5363720753cd5346dabf79a351d2e33d5c3534f542066286db1625f5a3173",
+    "zh:640d1d1443fff52f73c36f823646f01df3f9ac9a068cf483a1558926d82ce7c3",
+    "zh:6d7bfa87932ffa641eccf3a850c7e80470c492808d80c385cd5ff25c6bde5a27",
+    "zh:728391a1e61979be30d036e34e6655e6bc4dfeb6d6f6c32017c75e8cf60f30e8",
+    "zh:a4fa0e0722d8def0d8f1e284ab8085ab08ed8e42213cde248d15642b4c6fe28d",
+    "zh:a759b61e634e8dde000974871599ad162cbbd70433ef253774e02b86ca78d9e2",
+    "zh:b434f87b7a92cfe5536297c0e47a399c166c34d036141659ef11759596554a67",
+    "zh:e29909630e47744f9e40fbe8c75aee187b7699261bf83cb629bf14da2714abc0",
+    "zh:e72cfbfe1d6006dbc5eaeb7283cb661a3dc08bb68b7a90fc0a2db11e23a95834",
+  ]
+}
+
 provider "registry.terraform.io/terraform-aws-modules/http" {
   version     = "2.4.1"
   constraints = ">= 2.4.1"
