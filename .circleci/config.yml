@@ -93,8 +93,8 @@ workflows:
     jobs:
       # - build_init
       - terraform-validate:
-          requires:
-            - build_init
+          # requires:
+          #   - build_init
           filters:
             branches:
               only:
