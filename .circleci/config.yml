@@ -6,6 +6,9 @@ executors:
   terraform-executor:
     docker:
       - image: hashicorp/0.14.3
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
     working_directory: ~/src      
 
 aliases:
