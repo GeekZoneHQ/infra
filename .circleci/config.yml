@@ -5,7 +5,7 @@ orbs:
 executors:
   terraform-executor:
     docker:
-      - image: hashicorp/default
+      - image: hashicorp/0.14.2
         auth:
           username: $DOCKER_USERNAME
           password: $DOCKER_PASSWORD
