@@ -15,16 +15,16 @@ aliases:
       command: echo ${CIRCLE_BRANCH}
       
 jobs:
-  # build_init:
-  #   executor: terraform-executor
-  #   steps:
-      # - checkout
-      # - *show-current-branch-name
-      # - run:
-      #     command: >-
-      #       echo "credentials \"app.terraform.io\" {token =
-      #       \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-      #     name: Create .terraformrc file locally
+  build_init:
+    executor: terraform-executor
+    steps:
+      - checkout
+      - *show-current-branch-name
+      - run:
+          command: >-
+            echo "credentials \"app.terraform.io\" {token =
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+          name: Create .terraformrc file locally
 
   terraform-validate:
     executor: terraform-executor
@@ -91,10 +91,10 @@ workflows:
   #deploy_test_infra:
   test:
     jobs:
-      # - build_init
+      - build_init
       - terraform-validate:
-          # requires:
-          #   - build_init
+          requires:
+            - build_init
           filters:
             branches:
               only:
