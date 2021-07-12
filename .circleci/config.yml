@@ -1,10 +1,6 @@
 version: 2.1
 orbs:
-  terraform: circleci/terraform@2.1.0
-  # auth:
-  #   username: $DOCKER_USERNAME
-  #   password: $DOCKER_PASSWORD  
-  
+  terraform: circleci/terraform@2.1.0  
 
 executors:
   terraform-executor:
@@ -67,14 +63,16 @@ jobs:
             # terraform init -backend=true
             # backend_config_file: backend.hcl
             # path: .
+            # terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
             terraform init
-            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            terraform workspace new test
+            terraform workspace select test
             terraform plan
-
       - run:
           name: Terraform Apply
           command: |
-            terraform workspace select ${CIRCLE_BRANCH}
+            # terraform workspace select ${CIRCLE_BRANCH}
+            terraform workspace select test
             terraform apply --auto-approve
             
   terraform-destroy:
@@ -89,10 +87,9 @@ jobs:
             # backend_config_file: backend.hcl
             # path: .
             terraform init
-            terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            # terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
+            terraform workspace select test
             terraform destroy --auto-approve
-
-
 
 workflows:
   deploy_test_infra:
