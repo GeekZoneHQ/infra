@@ -45,7 +45,7 @@ jobs:
             terraform init -backend=true
             backend_config_file: backend.hcl
             path: .
-            terraform init -backend=false
+            # terraform init -backend=false
             terraform validate
             # terraform fmt -check
             
