@@ -42,12 +42,12 @@ jobs:
       - run:                  
           name: Terraform Validate & Format
           command: |
-            # terraform init -backend=true
-            # backend_config_file: backend.hcl
-            # path: .
+            terraform init -backend=true
+            backend_config_file: backend.hcl
+            path: .
             terraform init -backend=false
             terraform validate
-            # terraform fmt -check                    
+            terraform fmt -check                    
             
 
   terraform-plan-and-apply:
@@ -60,9 +60,9 @@ jobs:
       - run:
           name: Terraform Plan
           command: |            
-            # terraform init -backend=true
-            # backend_config_file: backend.hcl
-            # path: .
+            terraform init -backend=true
+            backend_config_file: backend.hcl
+            path: .
             terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}
             terraform init
             terraform plan
@@ -80,9 +80,9 @@ jobs:
       - run:
           name: Terraform Destroy
           command: |
-            # terraform init -backend=true
-            # backend_config_file: backend.hcl
-            # path: .
+            terraform init -backend=true
+            backend_config_file: backend.hcl
+            path: .
             terraform init
             terraform workspace select ${CIRCLE_BRANCH} || terraform workspace new ${CIRCLE_BRANCH}            
             terraform destroy --auto-approve
