@@ -44,7 +44,7 @@ jobs:
           command: |
             terraform init -backend-config=backend.hcl
             terraform validate
-            # terraform fmt -check            
+            terraform fmt -check
 
   terraform-plan-and-apply:
     executor: terraform-executor
@@ -58,8 +58,7 @@ jobs:
           command: |            
             terraform init -backend-config=backend.hcl
             path: .            
-            terraform workspace select test || terraform workspace new test
-            terraform init
+            terraform workspace select test || terraform workspace new test            
             terraform plan
       - run:
           name: Terraform Apply
