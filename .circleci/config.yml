@@ -55,10 +55,10 @@ jobs:
       - *show-current-branch-name
       - run:
           name: Terraform Plan
-          command: |            
-            terraform init -backend-config=backend.hcl
+          command: |
             path: .            
-            terraform workspace select test || terraform workspace new test            
+            terraform workspace select test || terraform workspace new test
+            terraform init -backend-config=backend.hcl
             terraform plan
       - run:
           name: Terraform Apply
