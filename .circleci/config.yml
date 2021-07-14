@@ -63,7 +63,7 @@ jobs:
           name: Terraform Apply
           command: |            
             terraform workspace select test
-            terraform apply #--auto-approve
+            terraform apply --auto-approve
             
   terraform-destroy:
     executor: terraform-executor
