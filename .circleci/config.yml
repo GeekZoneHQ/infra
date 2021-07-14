@@ -43,8 +43,8 @@ jobs:
           name: Terraform Validate & Format
           command: |
             terraform init -backend-config=backend.hcl
-            terraform validate 
-            # terraform fmt -check
+            terraform validate
+            # terraform fmt -check            
 
   terraform-plan-and-apply:
     executor: terraform-executor
