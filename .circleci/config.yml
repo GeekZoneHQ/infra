@@ -42,8 +42,8 @@ jobs:
       - run:                  
           name: Terraform Validate & Format
           command: |
-            terraform init -backend-config=backend.hcl
-              path: ..
+            terraform init #-backend-config=backend.hcl
+              #path: ..
             terraform validate
             # terraform fmt -check            
 
@@ -58,8 +58,8 @@ jobs:
           name: Terraform Plan
           command: |            
             terraform workspace select test || terraform workspace new test
-            terraform init -backend-config=backend.hcl
-              path: .. 
+            terraform init #-backend-config=backend.hcl
+              #path: .. 
             terraform plan
       - run:
           name: Terraform Apply
@@ -75,8 +75,8 @@ jobs:
       - run:
           name: Terraform Destroy
           command: |
-            terraform init -backend-config=backend.hcl
-              path: ..
+            terraform init #-backend-config=backend.hcl
+              #path: ..
             terraform workspace select test || terraform workspace new test
             terraform destroy --auto-approve
 
