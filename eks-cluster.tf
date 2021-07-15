@@ -4,7 +4,7 @@
     organization = "geekzone"
 
     workspaces {
-     name = "test1"
+     name = "test2"
     }
   }
 }
