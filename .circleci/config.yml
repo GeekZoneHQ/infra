@@ -64,7 +64,7 @@ jobs:
           name: Terraform Plan
           command: |
             terraform init 
-            terraform workspace select test || terraform workspace new test
+            #terraform workspace select test || terraform workspace new test
             # terraform init 
               #-backend-config=backend.hcl
               #path: .. 
@@ -72,7 +72,7 @@ jobs:
       - run:
           name: Terraform Apply
           command: |            
-            terraform workspace select test
+            # terraform workspace select test
             terraform apply --auto-approve
             
   terraform-destroy:
@@ -91,7 +91,7 @@ jobs:
             terraform init 
               #-backend-config=backend.hcl
               #path: ..
-            terraform workspace select test || terraform workspace new test
+            # terraform workspace select test || terraform workspace new test
             terraform destroy --auto-approve
 
 workflows:
