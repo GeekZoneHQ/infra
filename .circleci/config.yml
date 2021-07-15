@@ -63,10 +63,10 @@ jobs:
       - run:
           name: Terraform Plan
           command: |
-            echo "db_username=$db_username" >> tee -a ../gz.auto.tfvars
-            echo "db_password=$db_password" >> tee -a ../gz.auto.tfvars
-            echo "access_key=$AWS_ACCESS_KEY_ID" >> tee -a ../gz.auto.tfvars
-            echo "secret_key=$AWS_SECRET_ACCESS_KEY" >> tee -a ../gz.auto.tfvars
+            # echo "db_username=$db_username" >> tee -a ../gz.auto.tfvars
+            # echo "db_password=$db_password" >> tee -a ../gz.auto.tfvars
+            # echo "access_key=$AWS_ACCESS_KEY_ID" >> tee -a ../gz.auto.tfvars
+            # echo "secret_key=$AWS_SECRET_ACCESS_KEY" >> tee -a ../gz.auto.tfvars
             terraform init 
             #terraform workspace select test || terraform workspace new test
             # terraform init 
