@@ -63,8 +63,8 @@ jobs:
       - run:
           name: Terraform Plan
           command: |
-            export db_username=$db_username
-            export db_password=$db_password
+            echo "db_username="$db_username" >> tee -a ../gz.auto.tfvars
+            echo "db_password="$db_password" >> tee -a ../gz.auto.tfvars
             terraform init 
             #terraform workspace select test || terraform workspace new test
             # terraform init 
@@ -74,8 +74,6 @@ jobs:
       - run:
           name: Terraform Apply
           command: |
-            export db_username=$db_username
-            export db_password=$db_password
             # terraform workspace select test
             terraform apply --auto-approve
             
