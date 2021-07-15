@@ -29,3 +29,5 @@ variable "db_name" {}     #Database name
 variable "db_username" {} #Database username
 variable "db_password" {} #Database password
 variable "db_port" {}     #Database port
+variable "access_key" {}     #aws access key
+variable "secret_key" {}     #aws secret key
