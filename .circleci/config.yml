@@ -34,7 +34,7 @@ jobs:
           command: |
             terraform init
             terraform validate
-            terraform fmt -check                            
+                        
       - run:                  
           name: Terraform Plan & Apply
           command: |
