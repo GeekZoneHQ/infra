@@ -5,7 +5,7 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "Test-GZ-Cluster"
+  cluster_name = "cluster-Test-GZ"
   db_name      = "testgeekzone"
   region       = var.region
   tags         = {
