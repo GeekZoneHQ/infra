@@ -18,59 +18,29 @@ aliases:
       command: echo ${CIRCLE_BRANCH}
       
 jobs:
-  build_init:
+  terraform-init-validate-plan-apply:
     executor: terraform-executor
     steps:
       - checkout
       - *show-current-branch-name
       - run:
-          command: >-
-            echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
           name: Create .terraformrc file locally
-
-  terraform-validate:
-    executor: terraform-executor
-    steps:
-      - checkout
-      - *show-current-branch-name
-      - run:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-          name: Create .terraformrc file locally      
+
       - run:                  
           name: Terraform Validate & Format
           command: |
             terraform init
             terraform validate
-            # terraform fmt -check            
-
-  terraform-plan-and-apply:
-    executor: terraform-executor
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ./
-      - *show-current-branch-name
-      - run:
-          command: >-
-            echo "credentials \"app.terraform.io\" {token =
-            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-            #echo "[default]" >> $HOME/.aws/credentials
-            #echo "aws_access_key_id="$AWS_ACCESS_KEY_ID >> $HOME/.aws/credentials
-            #echo "aws_access_key_id="$AWS_SECRET_ACCESS_KEY >> $HOME/.aws/credentials
-          name: Create .terraformrc file locally
-      - run:
-          name: Terraform Plan
+            terraform fmt -check                            
+      - run:                  
+          name: Terraform Plan & Apply
           command: |
-            terraform init
-            terraform plan
-      - run:
-          name: Terraform Apply
-          command: |
+            terraform plan            
             terraform apply --auto-approve
-            
+              
   terraform-destroy:
     executor: terraform-executor
     steps:
@@ -89,19 +59,8 @@ jobs:
 
 workflows:
   deploy_test_infra:
-    jobs:
-      - build_init
-      - terraform-validate:
-          requires:
-            - build_init
-          filters:
-            branches:
-              only:
-                - test-infra
-                - test_prod_infra
-      - terraform-plan-and-apply:
-          requires:
-            - terraform-validate
+    jobs:      
+      - terraform-init-validate-plan-apply:
           filters:
             branches:
               only:
@@ -110,7 +69,7 @@ workflows:
       - hold:
           type: approval
           requires:
-            - terraform-plan-and-apply
+            - terraform-init-validate-plan-apply
       - terraform-destroy:
           requires:
             - hold
