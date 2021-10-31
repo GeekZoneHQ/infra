@@ -19,3 +19,16 @@ provider "kubernetes" {
     ]
   }
 }
+
+resource "kubernetes_namespace" "example" {
+  metadata {
+    name = "terraform-example-namespace"
+  }
+}
+
+
+resource "kubernetes_namespace" "n" {
+  metadata{
+    name ="namespace"
+  }
+}
