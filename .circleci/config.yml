@@ -31,14 +31,14 @@ jobs:
 
       - run:                  
           name: Terraform Validate & Format
-          command: |
+          command: |            
+            export TF_VAR_k8snamespace=echo ${CIRCLE_BRANCH}-${CIRCLE_PROJECT_REPONAME}
             terraform init
-            terraform validate
-                        
+            terraform validate                        
       - run:                  
           name: Terraform Plan & Apply
-          command: |
-            terraform plan            
+          command: |            
+            terraform plan
             terraform apply --auto-approve
               
   terraform-destroy:
@@ -53,7 +53,7 @@ jobs:
           name: Create .terraformrc file locally       
       - run:
           name: Terraform Destroy
-          command: |
+          command: |            
             terraform init
             terraform destroy --auto-approve
 

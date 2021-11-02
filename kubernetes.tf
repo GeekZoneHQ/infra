@@ -21,14 +21,21 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_namespace" "example" {
-  metadata {
-    name = "terraform-example-namespace"
+  metadata {    
+      name = "example-namespace"
+  }
+  timeouts {
+    delete = "5m"  
   }
 }
 
 
+
 resource "kubernetes_namespace" "n" {
-  metadata{
-    name ="namespace"
+  metadata{    
+      name = var.k8snamespace
+  }
+  timeouts {
+    delete = "5m"
   }
 }
