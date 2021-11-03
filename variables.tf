@@ -35,5 +35,5 @@ variable "db_username" {} #Database username
 variable "db_password" {} #Database password
 variable "db_port" {}     #Database port
 variable "k8snamespace" {
-   default = "123456" 
+
 }
