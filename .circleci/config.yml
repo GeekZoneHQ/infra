@@ -37,7 +37,7 @@ jobs:
       - run:                  
           name: Terraform Plan & Apply
           command: |
-            export TF_VAR_k8snamespace = ${CIRCLE_BRANCH}-${CIRCLE_PROJECT_REPONAME}
+            export TF_VAR_k8snamespace = $(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}
             terraform plan 
             terraform apply --auto-approve              
   terraform-destroy:
@@ -53,7 +53,7 @@ jobs:
       - run:
           name: Terraform Destroy
           command: |
-            export TF_VAR_k8snamespace = ${CIRCLE_BRANCH}-${CIRCLE_PROJECT_REPONAME}
+            export TF_VAR_k8snamespace = $(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}
             terraform init
             terraform destroy --auto-approve
 
