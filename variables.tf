@@ -37,5 +37,4 @@ variable "db_port" {}     #Database port
 variable "k8snamespace" {
   default = "TF-K8S-namespace"
   type = string
-  name = "Helloworld"
 }
