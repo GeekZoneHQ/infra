@@ -37,8 +37,8 @@ jobs:
       - run:                  
           name: Terraform Plan & Apply
           command: |            
-            terraform plan -var 'k8snamespace=Helloworld'
-            terraform apply -var 'k8snamespace=Helloworld'
+            terraform plan
+            terraform apply
   terraform-destroy:
     executor: terraform-executor
     steps:

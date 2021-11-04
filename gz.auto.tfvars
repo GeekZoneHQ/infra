@@ -1,5 +1,6 @@
 db_name     = "testgeekzone"
 db_port     = 5432
+k8snamespace = "Helloworld"
 # db_username = "$db_username"
 # db_password = "$db_password"
 # access_key = "$AWS_ACCESS_KEY_ID"
