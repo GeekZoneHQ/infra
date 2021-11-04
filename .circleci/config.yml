@@ -37,8 +37,8 @@ jobs:
       - run:                  
           name: Terraform Plan & Apply
           command: |            
-            terraform plan -var 'k8snamespace='$(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}
-            terraform apply -var 'k8snamespace='$(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}
+            terraform plan -var 'k8snamespace=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}'
+            terraform apply -var 'k8snamespace=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}'
   terraform-destroy:
     executor: terraform-executor
     steps:
