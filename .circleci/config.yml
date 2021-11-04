@@ -36,10 +36,9 @@ jobs:
             terraform validate
       - run:                  
           name: Terraform Plan & Apply
-          command: |
-            export TF_VAR_k8snamespace="echo ${CIRCLE_PROJECT_REPONAME}"
-            terraform plan
-            terraform apply --auto-approve
+          command: |            
+            terraform plan -var 'k8snamespace='$(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}
+            terraform apply -var 'k8snamespace='$(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}
   terraform-destroy:
     executor: terraform-executor
     steps:
@@ -53,7 +52,6 @@ jobs:
       - run:
           name: Terraform Destroy
           command: |
-            export TF_VAR_k8snamespace="echo ${CIRCLE_PROJECT_REPONAME}"
             terraform init
             terraform destroy --auto-approve
 
