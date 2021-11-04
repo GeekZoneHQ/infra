@@ -38,7 +38,7 @@ jobs:
           name: Terraform Plan & Apply
           command: |
             export TF_VAR_k8snamespace="echo ${CIRCLE_PROJECT_REPONAME}"
-            terraform plan -var-file gz.auto.tfvars
+            terraform plan
             terraform apply --auto-approve
   terraform-destroy:
     executor: terraform-executor
