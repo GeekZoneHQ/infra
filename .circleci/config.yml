@@ -24,8 +24,8 @@ aliases:
         echo $NS_NAME
 
       environment: 
-        PR_NUMBER: pr${CIRCLE_PULL_REQUEST##*/}
-        NS_NAME: $(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}        
+        PR_NUMBER: ${CIRCLE_PULL_REQUEST}
+        NS_NAME: ${CIRCLE_PULL_REQUEST}-${CIRCLE_PROJECT_REPONAME}
       
 jobs:
   terraform-init-validate-plan-apply:
