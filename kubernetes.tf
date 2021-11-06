@@ -33,7 +33,8 @@ resource "kubernetes_namespace" "example" {
 
 resource "kubernetes_namespace" "n" {
   metadata{    
-      name = var.k8snamespace
+      /* name = var.k8snamespace */
+      default = "123456"
   }
   timeouts {
     delete = "5m"

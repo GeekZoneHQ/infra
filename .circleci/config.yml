@@ -33,6 +33,7 @@ jobs:
     steps:
       - checkout
       - *show-current-branch-name
+      - *set-init-parameters
       - run:
           name: Create .terraformrc file locally
           command: >-
