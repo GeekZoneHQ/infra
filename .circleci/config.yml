@@ -16,6 +16,16 @@ aliases:
     run:
       name: Show current branch
       command: echo ${CIRCLE_BRANCH}
+  - &set-init-parameters
+    run:
+      name: setup the basic env params
+      command: |
+        echo $PR_NUMBER
+        echo $NS_NAME
+
+      environment: 
+        PR_NUMBER: pr${CIRCLE_PULL_REQUEST##*/}
+        NS_NAME: $(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}        
       
 jobs:
   terraform-init-validate-plan-apply:
@@ -38,7 +48,7 @@ jobs:
           name: Terraform Plan & Apply
           command: |            
             terraform plan
-            terraform apply
+            # terraform apply
   terraform-destroy:
     executor: terraform-executor
     steps:
@@ -53,7 +63,7 @@ jobs:
           name: Terraform Destroy
           command: |
             terraform init
-            terraform destroy --auto-approve
+            # terraform destroy --auto-approve
 
 workflows:
   deploy_test_infra:
