@@ -36,8 +36,7 @@ jobs:
             su -
             apt-get install sudo            
             apt-get update
-            apt install gettext-base moreutils
-            exit
+            apt install gettext-base moreutils            
 
       - run:
           name: Fill out template variables in yaml files
