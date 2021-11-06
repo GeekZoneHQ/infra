@@ -51,7 +51,7 @@ jobs:
           name: Terraform Plan & Apply
           command: |            
             terraform plan
-            terraform apply
+            terraform apply --auto-approve
   terraform-destroy:
     executor: terraform-executor
     steps:
@@ -66,7 +66,7 @@ jobs:
           name: Terraform Destroy
           command: |
             terraform init
-            # terraform destroy --auto-approve
+            terraform destroy --auto-approve
 
 workflows:
   deploy_test_infra:
