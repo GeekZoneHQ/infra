@@ -34,7 +34,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt-get update
-            sudo apt install gettext-base moreutils            
+            sudo apt install gettext-base moreutils terraform -y
 
       - run:
           name: Fill out template variables in yaml files
