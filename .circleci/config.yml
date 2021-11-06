@@ -51,7 +51,7 @@ jobs:
           name: Terraform Plan & Apply
           command: |            
             terraform plan
-            # terraform apply
+            terraform apply
   terraform-destroy:
     executor: terraform-executor
     steps:
