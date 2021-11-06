@@ -73,8 +73,7 @@ data "aws_eks_cluster_auth" "cluster" {
 
 resource "kubernetes_namespace" "example" {
   metadata {          
-      /* name = ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME} */
-      name = var.k8snamespace
+      name = "${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}"      
   }
   timeouts {
     delete = "5m"  
