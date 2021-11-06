@@ -36,7 +36,7 @@ variable "db_password" {} #Database password
 variable "db_port" {}     #Database port
 
 variable "k8snamespace" {
-  default = "${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}"
+  default = ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
   type = string
 }
 
