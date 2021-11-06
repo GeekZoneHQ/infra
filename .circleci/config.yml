@@ -31,6 +31,12 @@ jobs:
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
       - run:
+          name: Install dependencies
+          command: |
+            sudo apt-get update
+            sudo apt install gettext-base moreutils
+                        
+      - run:
           name: Fill out template variables in yaml files
           command: |
             export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
