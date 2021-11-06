@@ -35,6 +35,12 @@ jobs:
       - *show-current-branch-name
       - *set-init-parameters
       - run:
+          name: setup the basic env params
+          command: |
+            echo $PR_NUMBER
+            echo $NS_NAME
+      
+      - run:
           name: Create .terraformrc file locally
           command: >-
             echo "credentials \"app.terraform.io\" {token =
