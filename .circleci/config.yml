@@ -5,7 +5,7 @@ orbs:
 executors:
   terraform-executor:
     docker:
-      - image: hashicorp/terraform:0.14.3
+      - image: cimg/base:stable
         auth:
           username: $DOCKER_USERNAME
           password: $DOCKER_PASSWORD
@@ -20,7 +20,7 @@ aliases:
       
 jobs:
   terraform-init-validate-plan-apply:
-    executor: terraform/default
+    executor: terraform-executor
     steps:
       - checkout
       - *show-current-branch-name
@@ -53,7 +53,7 @@ jobs:
             terraform plan
             # terraform apply
   terraform-destroy:
-    executor: terraform/default
+    executor: terraform-executor
     steps:
       - checkout
       - *show-current-branch-name
