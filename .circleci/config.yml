@@ -16,16 +16,7 @@ aliases:
     run:
       name: Show current branch
       command: echo ${CIRCLE_BRANCH}
-  - &set-init-parameters
-    run:
-      name: setup the basic env params
-      command: |
-        echo $PR_NUMBER
-        echo $NS_NAME
 
-      environment: 
-        PR_NUMBER: ${CIRCLE_PULL_REQUEST}
-        NS_NAME: ${CIRCLE_PULL_REQUEST}-${CIRCLE_PROJECT_REPONAME}
       
 jobs:
   terraform-init-validate-plan-apply:
@@ -33,18 +24,17 @@ jobs:
     steps:
       - checkout
       - *show-current-branch-name
-      - *set-init-parameters
-      - run:
-          name: setup the basic env params
-          command: |
-            echo $PR_NUMBER
-            echo $NS_NAME
       
       - run:
           name: Create .terraformrc file locally
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+      - run:
+          name: Fill out template variables in yaml files
+          command: |
+            export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
+            envsubst < eks-cluster.tf | sponge eks-cluster.tf
 
       - run:                  
           name: Terraform Validate & Format
