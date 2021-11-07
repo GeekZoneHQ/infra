@@ -61,7 +61,13 @@ jobs:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-          name: Create .terraformrc file locally       
+          name: Create .terraformrc file locally
+      - run:
+          name: Install dependencies
+          command: |
+            sudo mv terraform /usr/local/bin
+            sudo apt-get update
+            sudo apt install gettext-base moreutils -y          
       - run:
           name: Terraform Destroy
           command: |
