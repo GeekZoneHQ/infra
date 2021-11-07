@@ -32,7 +32,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo mv terraform /usr/local/bin
+            sudo cp terraform /usr/local/bin
             sudo apt-get update
             sudo apt install gettext-base moreutils -y
 
@@ -65,12 +65,13 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo mv terraform /usr/local/bin
-            sudo apt-get update
-            sudo apt install gettext-base moreutils -y          
+          
       - run:
           name: Terraform Destroy
           command: |
+            sudo cp terraform /usr/local/bin
+            sudo apt-get update
+            sudo apt install gettext-base moreutils -y
             terraform init
             terraform destroy --auto-approve
 
