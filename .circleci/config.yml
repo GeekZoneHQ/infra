@@ -72,6 +72,13 @@ jobs:
                   sudo apt-get update
                   sudo apt install gettext-base moreutils -y
       - run:
+          name: Fill out template variables in yaml files
+          command: |
+            export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
+            envsubst < kubernetes.tf | sponge kubernetes.tf
+
+
+      - run:
           name: Terraform Destroy
           command: |
             terraform init
