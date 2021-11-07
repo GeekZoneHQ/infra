@@ -82,7 +82,7 @@ jobs:
           name: Terraform Destroy
           command: |
             terraform init
-            terraform destroy --auto-approve  -target kubernetes.kubernetes_namespace.example.name
+            terraform destroy --auto-approve  -target kubernetes_namespace.example
 
 workflows:
   deploy_test_infra:
