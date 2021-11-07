@@ -74,15 +74,15 @@ jobs:
       - run:
           name: Fill out template variables in yaml files
           command: |
+            export RES_NAME=${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
             export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
             envsubst < kubernetes.tf | sponge kubernetes.tf
-
 
       - run:
           name: Terraform Destroy
           command: |
             terraform init
-            terraform destroy --auto-approve
+            terraform destroy --auto-approve  -target kubernetes_namespace.${RES_NAME}
 
 workflows:
   deploy_test_infra:
