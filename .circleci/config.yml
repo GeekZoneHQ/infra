@@ -29,6 +29,7 @@ jobs:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+
       - run:
           name: Install dependencies
           command: |
@@ -40,18 +41,20 @@ jobs:
           name: Fill out template variables in yaml files
           command: |
             export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
-            envsubst < eks-cluster.tf | sponge eks-cluster.tf
+            envsubst < kubernetes.tf | sponge kubernetes.tf
 
       - run:                  
           name: Terraform Validate & Format
           command: |
             terraform init
             terraform validate
+
       - run:                  
           name: Terraform Plan & Apply
           command: |            
             terraform plan
             terraform apply --auto-approve
+
   terraform-destroy:
     executor: terraform-executor
     steps:
