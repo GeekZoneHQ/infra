@@ -90,9 +90,9 @@ jobs:
               currTime=$(date +%s)
             done
             echo "Continue to destroy-Hurray"
-            # terraform init
+            terraform init
             # terraform destroy --auto-approve  -target kubernetes_namespace.example.id
-            #  terraform destroy --auto-approve
+            terraform destroy --auto-approve
 
 workflows:
   deploy_test_infra:
