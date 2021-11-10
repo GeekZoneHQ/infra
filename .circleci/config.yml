@@ -80,10 +80,19 @@ jobs:
 
       - run:
           name: Terraform Destroy
-          command: |
-            terraform init
+          command: |          
+            # run a loop till the time crosses 3 hours and let the job continue to destroy the namesapce. slack message.
+            currTime=$(date +%s)
+            eAdd=$((60))
+            endTime=$((currTime+eAdd))
+            while [ $currTime -le $endTime]
+            do
+              currTime=$(date +%s)
+            done
+            echo "Continue to destroy-Hurray"
+            # terraform init
             # terraform destroy --auto-approve  -target kubernetes_namespace.example.id
-             terraform destroy --auto-approve
+            #  terraform destroy --auto-approve
 
 workflows:
   deploy_test_infra:
@@ -94,13 +103,14 @@ workflows:
               only:
                 - test-infra
                 - test_prod_infra
-      - hold:
-          type: approval
-          requires:
-            - terraform-init-validate-plan-apply
+      # - hold:
+      #     type: approval
+      #     requires:
+      #       - terraform-init-validate-plan-apply
       - terraform-destroy:
           requires:
-            - hold
+            # - hold
+            - terraform-init-validate-plan-apply
           filters:
             branches:
               only:
