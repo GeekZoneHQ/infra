@@ -103,13 +103,13 @@ workflows:
               only:
                 - test-infra
                 - test_prod_infra
-      # - hold:
-      #     type: approval
-      #     requires:
-      #       - terraform-init-validate-plan-apply
+      - hold:
+          type: approval
+          requires:
+            - terraform-init-validate-plan-apply
       - terraform-destroy:
           requires:
-            # - hold
+            - hold
             - terraform-init-validate-plan-apply
           filters:
             branches:
