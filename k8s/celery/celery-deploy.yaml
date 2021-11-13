@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: celery
+  name: celery
+  namespace: celery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery
+  template:
+    metadata:
+      labels:
+        app: celery
+    spec:
+      containers:
+      - envFrom:
+          - secretRef:
+              name: celery-secrets 
+        image: geekzone/backend:0.1.957
+        name: celery 
+        command: ["sh", "-c", "celery -A web worker -l INFO"]
+        resources:
+          limits:
+            memory: "100Mi"
+            cpu: 50m
+          requests:
+            memory: "50Mi"
+            cpu: 30m
