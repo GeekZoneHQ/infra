@@ -91,9 +91,8 @@ jobs:
             while [ $currTime -le $endTime ]
             do
             currTime=$(date +%s)
-            echo $currTime
-            echo $endTime
             done
+            echo datedcurrTime                        
             echo "Continue to destroy-Hurray"
             terraform init
             # terraform destroy --auto-approve  -target kubernetes_namespace.example.id
@@ -108,13 +107,13 @@ workflows:
               only:
                 - test-infra
                 - test_prod_infra
-      - hold:
-          type: approval
-          requires:
-            - terraform-init-validate-plan-apply
+      # - hold:
+      #     type: approval
+      #     requires:
+      #       - terraform-init-validate-plan-apply
       - terraform-destroy:
           requires:
-            - hold
+            # - hold
             - terraform-init-validate-plan-apply
           filters:
             branches:
