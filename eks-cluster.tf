@@ -16,6 +16,7 @@ module "eks" {
   map_users       = var.map_users
   subnets         = module.vpc.private_subnets
 
+
   tags = {
     environment = "test"
   }
