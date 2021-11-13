@@ -80,14 +80,19 @@ jobs:
 
       - run:
           name: Terraform Destroy
-          command: |          
-            # run a loop till the time crosses 3 hours and let the job continue to destroy the namesapce. slack message.
+          command: |
+            date +%s
             currTime=$(date +%s)
+            echo $currTime
             eAdd=$((60))
+            echo $eAdd
             endTime=$((currTime+eAdd))
-            while [ $currTime -le $endTime]
+            echo $endTime
+            while [ $currTime -le $endTime ]
             do
-              currTime=$(date +%s)
+            currTime=$(date +%s)
+            echo $currTime
+            echo $endTime
             done
             echo "Continue to destroy-Hurray"
             terraform init
