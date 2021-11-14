@@ -23,7 +23,7 @@ provider "kubernetes" {
  resource "kubernetes_namespace" "example" {
   metadata {          
       name = "${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}"
-      /* name = "pr12-infra" */ 
+      /* name = "pr12-infra" */
   }
   timeouts {
     delete = "5m"  

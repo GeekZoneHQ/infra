@@ -15,13 +15,15 @@ aliases:
     run:
       name: Show current branch
       command: echo ${CIRCLE_BRANCH}
+
       
 jobs:
   terraform-init-validate-plan-apply:
     executor: terraform-executor
     steps:
       - checkout
-      - *show-current-branch-name      
+      - *show-current-branch-name
+      
       - run:
           name: Create .terraformrc file locally
           command: >-
@@ -52,35 +54,30 @@ jobs:
           command: |            
             terraform plan
             terraform apply --auto-approve
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
 
   terraform-destroy:
     executor: terraform-executor
     steps:
-      - attach_workspace:
-          at: .          
       - checkout
-      # - *show-current-branch-name
-      # - run:
-      #     command: >-
-      #       echo "credentials \"app.terraform.io\" {token =
-      #       \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-      #     name: Create .terraformrc file locally
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #             sudo cp terraform /usr/local/bin
-      #             sudo apt-get update
-      #             sudo apt install gettext-base moreutils -y
-      # - run:
-      #     name: Fill out template variables in yaml files
-      #     command: |
-      #       export RES_NAME=${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
-      #       export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
-      #       envsubst < kubernetes.tf | sponge kubernetes.tf
+      - *show-current-branch-name
+      - run:
+          command: >-
+            echo "credentials \"app.terraform.io\" {token =
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
+          name: Create .terraformrc file locally
+      - run:
+          name: Install dependencies
+          command: |
+                  sudo cp terraform /usr/local/bin
+                  sudo apt-get update
+                  sudo apt install gettext-base moreutils -y
+      - run:
+          name: Fill out template variables in yaml files
+          command: |
+            export RES_NAME=${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
+            export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
+            envsubst < kubernetes.tf | sponge kubernetes.tf
+
       - run:
           name: Terraform Destroy
           command: |
@@ -109,7 +106,6 @@ workflows:
             branches:
               only:
                 - test_prod_infra
-
       - terraform-destroy:
           requires:
             - terraform-init-validate-plan-apply
