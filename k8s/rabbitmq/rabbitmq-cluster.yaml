@@ -1,0 +1,38 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: geek-zone-cluster
+  namespace: rabbitmq-system
+spec:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 200m 
+      memory: 350Mi
+    limits:
+      cpu: 200m
+      memory: 350Mi
+  rabbitmq:
+    additionalConfig: |
+      cluster_partition_handling = pause_minority
+      vm_memory_high_watermark_paging_ratio = 0.99
+      disk_free_limit.absolute = 2GB
+      collect_statistics_interval = 10000
+      log.file.level = info
+  persistence:
+    storageClassName: ssd
+    storage: "10Gi"
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers: []
+            topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: "topology.kubernetes.io/zone"
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: production-ready
+
