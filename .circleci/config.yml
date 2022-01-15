@@ -46,7 +46,7 @@ jobs:
       - run:                  
           name: Terraform Validate & Format
           command: |
-            terraform init
+            terraform init --upgrade
             terraform validate
 
       - run:                  
@@ -94,7 +94,7 @@ jobs:
             # done
             # echo datedcurrTime                        
             echo "Continue to destroy-Hurray"
-            terraform init
+            terraform init --upgrade
             # terraform destroy --auto-approve  -target kubernetes_namespace.example.id
             terraform destroy --auto-approve
 
@@ -105,7 +105,7 @@ workflows:
           filters:
             branches:
               only:
-                - test_prod_infra
+                # - test_prod_infra
                 - test_prod_infra2
       - terraform-destroy:
           requires:
@@ -113,6 +113,6 @@ workflows:
           filters:
             branches:
               only:
-                - test_prod_infra
+                # - test_prod_infra
                 - test_prod_infra2
 
