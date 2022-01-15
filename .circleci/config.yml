@@ -81,18 +81,18 @@ jobs:
       - run:
           name: Terraform Destroy
           command: |
-            date +%s
-            currTime=$(date +%s)
-            echo $currTime
-            eAdd=$((60))
-            echo $eAdd
-            endTime=$((currTime+eAdd))
-            echo $endTime
-            while [ $currTime -le $endTime ]
-            do
-            currTime=$(date +%s)
-            done
-            echo datedcurrTime                        
+            # date +%s
+            # currTime=$(date +%s)
+            # echo $currTime
+            # eAdd=$((60))
+            # echo $eAdd
+            # endTime=$((currTime+eAdd))
+            # echo $endTime
+            # while [ $currTime -le $endTime ]
+            # do
+            # currTime=$(date +%s)
+            # done
+            # echo datedcurrTime                        
             echo "Continue to destroy-Hurray"
             terraform init
             # terraform destroy --auto-approve  -target kubernetes_namespace.example.id
