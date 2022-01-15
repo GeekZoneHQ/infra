@@ -106,6 +106,7 @@ workflows:
             branches:
               only:
                 - test_prod_infra
+                - test_prod_infra2
       - terraform-destroy:
           requires:
             - terraform-init-validate-plan-apply
@@ -113,4 +114,5 @@ workflows:
             branches:
               only:
                 - test_prod_infra
+                - test_prod_infra2
 
