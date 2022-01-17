@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valheim-server
+  labels:
+    app: valheim-server
+    designation: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: valheim-server
+      designation: server
+  template:
+    metadata:
+      namespace: valheim-server
+      labels:
+        app: valheim-server
+        designation: server
+    spec:
+      containers:
+        - name: valheim-server
+          image: mbround18/valheim:latest
+          imagePullPolicy: Always
+          env:
+            - name: NAME
+              value: "Valheim Server"
+            - name: WORLD
+              value: "Dedicated"
+            - name: PORT
+              value: "2456"
+            - name: PUBLIC 
+              value: "true"
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: valheim-server-env
+                  key: PASSWORD
+            - name: AUTO_UPDATE
+              value: "1"
+          ports:
+            - name: join-1
+              containerPort: 2456
+              protocol: UDP 
+            - name: join-2
+              containerPort: 2457
+              protocol: UDP 
+            - name: join-3
+              containerPort: 2458
+              protocol: UDP 
+          volumeMounts:
+            - name: valheim-server-persistent-storage
+              mountPath: /home/steam/.config/unity3d/IronGate/Valheim
+              subPath: saves
+            - name: valheim-server-persistent-storage
+              mountPath: /home/steam/valheim
+      tolerations: 
+        - key: "geekzone-games"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+      nodeSelector: 
+        geekzone-games: "true"
+      volumes:
+        - name: valheim-server-persistent-storage
+          persistentVolumeClaim:
+            claimName: valheim-server-pv-claim

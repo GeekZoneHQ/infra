@@ -2,7 +2,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: fluentd-es-config-v0.1.4
-  namespace: logging
+  namespace: kube-system
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
 data:
@@ -143,29 +143,6 @@ data:
       max_bytes 500000
       max_lines 1000
     </match>
-
-    <source>
-      @type tail
-      path /var/lib/docker/containers/
-      tag sample.tag
-      <parse>
-        @type multiline
-        format_firstline /\d{4}-\d{1,2}-\d{1,2}/
-        format1 /(?<timestamp>[^ ]* [^ ]*) (?<level>[^\s]+:)(?<message>[\s\S]*)/
-      </parse>
-    </source>
-
-
-    <source>
-      @type tail
-      path /usr/src/app/debug.log
-      tag sample.tag
-      <parse>
-        @type multiline
-        format_firstline /\d{4}-\d{1,2}-\d{1,2}/
-        format1 /(?<timestamp>[^ ]* [^ ]*) (?<level>[^\s]+:)(?<message>[\s\S]*)/
-      </parse>
-    </source>
 
   system.input.conf: |-
     # Example:

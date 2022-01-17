@@ -3,6 +3,12 @@ variable "region" {
   description = "AWS region"
 }
 
+variable "key_name" {
+  description = "The key name to use for the bastion-host and EKS worker nodes"
+  type        = string
+  default     = ""
+}
+
 variable "map_users" {
   description = "Additional IAM users to add to the aws-auth configmap"
   type = list(object({
@@ -22,6 +28,22 @@ variable "map_users" {
       username = "james"
       groups   = ["system:masters"]  
     },
+    {
+      userarn  = "arn:aws:iam::098281131088:user/sam"
+      username = "sam"
+      groups   = ["system:masters"]  
+    },
+    {
+      userarn  = "arn:aws:iam::098281131088:user/bala"
+      username = "bala"
+      groups   = ["system:masters"]  
+    },
+    {
+      userarn  = "arn:aws:iam::098281131088:user/circleci"
+      username = "circleci"
+      groups   = ["system:masters"]  
+    }
+    
   ]
 } 
 
@@ -29,3 +51,4 @@ variable "db_name" {}     #Database name
 variable "db_username" {} #Database username
 variable "db_password" {} #Database password
 variable "db_port" {}     #Database port
+

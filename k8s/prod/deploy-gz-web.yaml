@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gz-web
-  namespace: web
+  namespace: prod
   labels:
     app: gz-web
 spec:
@@ -17,23 +17,23 @@ spec:
     spec:
       initContainers:
       - name: wait-for-migration
-        image: geekzone/backend:0.1.957
+        image: geekzone/backend:0.1.1132
         command: ['python3', 'manage.py', 'migrate']
         envFrom:
           - secretRef:
-              name: web-secrets
+              name: prod-secrets
       - name: wait-for-database
-        image: geekzone/backend:0.1.957
+        image: geekzone/backend:0.1.1132
         command: ['python3', 'manage.py', 'wait_for_database']
         envFrom:
           - secretRef:
-              name: web-secrets 
+              name: prod-secrets
       containers:
       - name: django-backend
-        image: geekzone/backend:0.1.957
+        image: geekzone/backend:0.1.1132
         envFrom:
           - secretRef:
-              name: web-secrets
+              name: prod-secrets
         resources:
           limits:
             memory: "100Mi"
@@ -42,7 +42,7 @@ spec:
             memory: "50Mi"
             cpu: 30m
       - name: frontend-proxy
-        image: geekzone/frontend:0.1.957
+        image: geekzone/frontend:0.1.1132
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -69,7 +69,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gz-web-service
-  namespace: web
+  namespace: prod
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: test.geek.zone
+#    external-dns.alpha.kubernetes.io/ttl: "120" #optional
 spec:
   type: ClusterIP
   selector:

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: curator
+  name: curator
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: curator
+  template:
+    metadata:
+      labels:
+        app: curator
+    spec:
+      containers:
+      - image: geekzone/elasticsearch-curator
+        name: elasticsearch-curator
+        env:
+        - name: PERIOD
+          value: "86400"
+        - name: ES_HOST
+          value: "elasticsearch-logging"
+        # - name: DELETE_AGE
+        #   value: "30"
+
+          

@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: valheim-server-pv-claim
+  namespace: valheim-server
+spec:
+  # Change this based on the storage class you use. 
+  # In the example I have a longhorn system setup.
+  storageClassName: region1storageclass
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20G

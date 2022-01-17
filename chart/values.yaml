@@ -1,0 +1,54 @@
+worldName: geekzone
+serverName: geekzone
+password: $PASSWORD
+
+resources: {}
+
+image:
+  repository: lloesche/valheim-server
+  tag: latest
+
+storage:
+  kind: hostvol
+  hostvol:
+    path: /data/valheim
+  pvc:
+    size: 1Gi
+
+serverStorage:
+  kind: hostvol
+  hostvol:
+    path: /data/valheim-server
+  pvc:
+    size: 5Gi
+
+networking:
+  serviceType: ClusterIP
+  gamePort: 2456
+  publishQueryPort: "true"
+  nodePort: 2456
+
+nodeSelector: 
+  geekzone-games: "true"
+  
+tolerations: 
+ - key: "geekzone-games"
+   operator: "Equal"
+   value: "true"
+   effect: "NoSchedule"
+
+# resources:
+#   requests:
+#     memory: "4Gi"
+#     cpu: "2000m"
+
+extraEnvironmentVars:
+  BACKUPS: true
+  BACKUPS_CRON: "0 * * * *"
+  BACKUPS_MAX_AGE: 3
+#   POST_BACKUP_HOOK: "timeout 300 scp -i /extraVolumes/backup-ssh-key/ssh-privatekey -o StrictHostKeyChecking=no @BACKUP_FILE@ myself@example.com:~/valheim_backups/$(basename @BACKUP_FILE@)"
+
+# extraVolumes:
+# - type: secret
+#   name: backup-ssh-key
+#   defaultMode: 0600

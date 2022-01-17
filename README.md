@@ -26,7 +26,7 @@ In order to provision Geek.Zone's EKS cluster you will need to install the Terra
 - "kubectl apply -f k8s/monitoring"
 - "kubectl apply -f k8s/rabbitmq"
 - "kubectl apply -f k8s/web"
-You can then run "kubectl get all --all-namespaces" to check the status of all the resources in the EKS cluster. Once the ingress-controller has been deployed, copy and paste the DNS name of the load balancer (that gets created along with the controller) into the target field of the CNAME records for logging, monitoring, rabbitmq and test.geek.zone in Cloudflair.
+You can then run "kubectl get all --all-namespaces" to check the status of all the resources in the EKS cluster. Once the ingress-controller has been deployed, copy and paste the DNS name of the load balancer (that gets created along with the controller) into the target field of the CNAME records for logging, monitoring, rabbitmq and test.geek.zone in Cloudflare.
 
 To delete all the resources deployed in the EKS cluster, just run the following command:
 - "kubectl delete -f k8s/namespaces"

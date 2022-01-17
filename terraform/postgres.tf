@@ -38,7 +38,7 @@ module "db" {
 
   # All available versions: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts
   engine               = "postgres"
-  engine_version       = "12.5"
+  engine_version       = "12.7"
   family               = "postgres12" # DB parameter group
   major_engine_version = "12"         # DB option group
   instance_class       = "db.t2.micro"

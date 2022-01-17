@@ -6,7 +6,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: fluentd-es
-  namespace: logging
+  namespace: kube-system
   labels:
     k8s-app: fluentd-es
     kubernetes.io/cluster-service: "true"
@@ -42,7 +42,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: fluentd-es
-  namespace: logging
+  namespace: kube-system
   apiGroup: ""
 roleRef:
   kind: ClusterRole
@@ -53,7 +53,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd-es-v2.2.0
-  namespace: logging
+  namespace: kube-system
   labels:
     k8s-app: fluentd-es
     version: v2.2.0
@@ -302,6 +302,9 @@ kind: Service
 metadata:
   name: kibana-logging
   namespace: kube-system
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: logging.geek.zone
+#    external-dns.alpha.kubernetes.io/ttl: "120" #optional
   labels:
     k8s-app: kibana-logging
     kubernetes.io/cluster-service: "true"
