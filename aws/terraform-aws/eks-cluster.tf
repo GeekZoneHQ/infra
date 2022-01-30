@@ -9,9 +9,9 @@ terraform {
   }
 }
 
-resource "aws_kms_key" "eks" {
-  description = "EKS Secret Encryption Key"
-}
+# resource "aws_kms_key" "eks" {
+#   description = "EKS Secret Encryption Key"
+# }
 
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
@@ -20,16 +20,16 @@ module "eks" {
   map_users       = var.map_users
   subnets         = module.vpc.private_subnets
 
-  cluster_encryption_config = [
-    {
-      provider_key_arn = aws_kms_key.eks.arn
-      resources        = ["secrets"]
-    }
-  ]
+  # cluster_encryption_config = [
+  #   {
+  #     provider_key_arn = aws_kms_key.eks.arn
+  #     resources        = ["secrets"]
+  #   }
+  # ]
 
-  tags = {
-    environment = "dev"
-  }
+  # tags = {
+  #   environment = "dev"
+  # }
 
   vpc_id = module.vpc.vpc_id
 
@@ -49,9 +49,9 @@ module "eks" {
     {
       name                          = "workers-1.21"
       instance_type                 = "t3.medium"
-      asg_min_size                  = "2"
-      asg_desired_capacity          = "3"
-      asg_max_size                  = "4"
+      asg_min_size                  = "1"
+      asg_desired_capacity          = "1"
+      asg_max_size                  = "3"
       root_volume_size              = "20"
       root_volume_type              = "gp2"
       key_name                      = "geekzone"

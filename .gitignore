@@ -29,10 +29,10 @@ terraform/*_override.tf.json
 # example: *tfplan*
 
 #Include secrets to prevent from sending to remote repository
-k8s/prod/prod-secrets.yaml
-k8s/celery/celery-secrets.yaml
-k8s/logging/basic-auth.yaml
-k8s/external-dns/external-dns-secrets.yaml
-k8s/monitoring/alertmanager.yaml
-k8s/monitoring/monitoring-secrets.yaml
-k8s/staging/staging-secrets.yaml
+**/k8s/prod/prod-secrets.yaml
+**/k8s/celery/celery-secrets.yaml
+**/k8s/logging/basic-auth.yaml
+**/k8s/external-dns/external-dns-secrets.yaml
+**/k8s/monitoring/alertmanager.yaml
+**/k8s/monitoring/monitoring-secrets.yaml
+**/k8s/staging/staging-secrets.yaml
