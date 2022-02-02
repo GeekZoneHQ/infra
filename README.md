@@ -34,12 +34,12 @@ cd aws
 
 Run the following script to provision the infrastructure: 
 ```sh
-cd aws
+cd azure
 ./create-azure-infra.sh
 ```
 
 Run the following command to destroy the infrastructure:
 ```sh
-cd aws
+cd azure
 ./destroy-azure-infra.sh
 ```
