@@ -5,7 +5,6 @@ cd terraform-azure/
 terraform init
 sleep 60
 terraform apply -auto-approve
-sleep 900
 
 # Create resources in the k8s cluster
 cd ../k8s/
