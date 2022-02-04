@@ -3,12 +3,12 @@
 # Launch k8s cluster in AWS 
 cd terraform-aws/
 terraform init
-sleep 60
 terraform apply -auto-approve
 
 # Create resources in the k8s cluster
 cd ../k8s/
-aws eks --region eu-west-2 update-kubeconfig --name GeekZoneCluster
+rm ~/.kube/config
+aws eks --region eu-west-2 update-kubeconfig --name GeekZoneCluster 
 kubectl apply -f namespaces.yaml
 kubectl apply -f aws-storage-class.yaml
 kubectl apply -f keda-2.5.0.yaml

@@ -3,7 +3,6 @@
 # Launch k8s cluster in Azure
 cd terraform-azure/
 terraform init
-sleep 60
 terraform apply -auto-approve
 
 # Create resources in the k8s cluster

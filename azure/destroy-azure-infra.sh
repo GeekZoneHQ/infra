@@ -8,7 +8,6 @@ sed -i 's/"amqp.*"/"$CELERY_BROKER_URL"/' prod/prod-secrets.yaml
 # Destroy k8s cluster in Azure
 cd ../terraform-azure
 terraform init
-sleep 60
 terraform destroy -auto-approve
 
 # Remove user, cluster and context from kubeconfig
