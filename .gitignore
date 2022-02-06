@@ -5,6 +5,9 @@
 terraform/*.tfstate
 terraform/*.tfstate.*
 
+#tf vars file
+aws/terraform-aws/gz.auto.tfvars
+
 # Crash log files
 terraform/crash.log
 
@@ -36,3 +39,7 @@ terraform/*_override.tf.json
 **/k8s/monitoring/alertmanager.yaml
 **/k8s/monitoring/monitoring-secrets.yaml
 **/k8s/staging/staging-secrets.yaml
+
+
+
+
