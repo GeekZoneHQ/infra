@@ -11,6 +11,9 @@ metadata:
     # message to display with an appropriate context why the authentication is required
     nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - geekzone'
 spec:
+  tls:
+  - hosts:
+    - "logging.geek.zone"
   rules: 
   - host: logging.geek.zone
     http:

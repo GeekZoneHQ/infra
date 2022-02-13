@@ -1,16 +1,3 @@
-# apiVersion: storage.k8s.io/v1
-# kind: StorageClass
-# metadata:
-#   name: ssd
-# provisioner: kubernetes.io/aws-ebs
-# parameters:
-#   type: gp2
-# reclaimPolicy: Retain
-# allowVolumeExpansion: true
-
-
----
-
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -23,6 +10,5 @@ parameters:
   skuName: Standard_LRS
   location: "UK South"
   resourceGroup: "Geek.Zone"
-  #storageAccount: "geekzone"
 
 

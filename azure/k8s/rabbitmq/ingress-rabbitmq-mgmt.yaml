@@ -4,6 +4,9 @@ metadata:
   name: ingress-rabbitmq-mgmt
   namespace: rabbitmq-system
 spec:
+  tls:
+  - hosts:
+    - "rabbitmq.geek.zone"
   rules: 
     - host: rabbitmq.geek.zone
       http:

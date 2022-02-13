@@ -11,7 +11,7 @@ terraform init
 terraform destroy -auto-approve
 
 # Remove user, cluster and context from kubeconfig
-kubectl config delete-user clusterAdmin_GeekZone_GeekZoneCluster
+kubectl config delete-user clusterAdmin_geekzone_GeekZoneCluster
 kubectl config delete-cluster GeekZoneCluster
 kubectl config delete-context GeekZoneCluster-admin
 
