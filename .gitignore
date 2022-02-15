@@ -36,3 +36,4 @@ terraform/*_override.tf.json
 **/k8s/monitoring/alertmanager.yaml
 **/k8s/monitoring/monitoring-secrets.yaml
 **/k8s/staging/staging-secrets.yaml
+**/k8s/cert-manager/clusterissuer-secrets.yaml
