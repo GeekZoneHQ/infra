@@ -57,7 +57,7 @@ spec:
         - --domain-filter=geek.zone # (optional) limit to only example.com domains; change to match the zone created above.
         - --zone-id-filter=0a6922d1395d374729870d071e623aa0 # (optional) limit to a specific zone.
         - --provider=cloudflare
-#        - --cloudflare-proxied # (optional) enable the proxy feature of Cloudflare (DDOS protection, CDN...)
+        - --cloudflare-proxied # (optional) enable the proxy feature of Cloudflare (DDOS protection, CDN...)
         envFrom:
         - secretRef:
             name: external-dns-secrets 

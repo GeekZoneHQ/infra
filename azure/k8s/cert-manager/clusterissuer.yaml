@@ -10,8 +10,6 @@ spec:
       name: letsencrypt-prod
     solvers:
     - dns01:
-        # Valid values are None and Follow
-        # cnameStrategy: Follow
         cloudflare:
           email: giulio.giunta@geek.zone
           apiTokenSecretRef:
@@ -19,5 +17,4 @@ spec:
             key: api-token
       selector:
         dnsNames:
-        # - 'geek.zone'
         - '*.geek.zone'
