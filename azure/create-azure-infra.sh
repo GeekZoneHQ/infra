@@ -11,7 +11,11 @@ az aks get-credentials --resource-group geekzone --name GeekZoneCluster --admin
 kubectl apply -f namespaces.yaml
 kubectl apply -f ingress-nginx/
 sleep 30
-kubectl apply -f cert-manager/
+kubectl apply -f cert-manager/cert-manager.yaml
+kubectl apply -f cert-manager/clusterissuer-secrets.yaml
+sleep 120
+kubectl apply -f cert-manager/clusterissuer.yaml
+kubectl apply -f cert-manager/wildcard-cert.yaml
 sleep 30
 kubectl apply -f rabbitmq/cluster-operator.yaml
 sleep 30
