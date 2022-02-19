@@ -24,7 +24,7 @@ spec:
         command: ["sh", "-c", "celery -A web worker -l INFO"]
         resources:
           limits:
-            memory: "100Mi"
+            memory: "200Mi"
             cpu: 50m
           requests:
             memory: "50Mi"
