@@ -59,3 +59,8 @@ output "db_instance_port" {
   description = "The database port"
   value       = module.db.db_instance_port
 }
+
+output "vpc_id" {
+  description = "The id of the VPC containing Geek.Zone Infrastructure"
+  value       = module.vpc.vpc_id
+}
