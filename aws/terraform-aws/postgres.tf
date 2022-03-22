@@ -1,14 +1,7 @@
-/*
-provider "aws" {
-  region = var.region
-}
-*/
-################################################################################
-
 resource "aws_db_subnet_group" "geekzone" {
 
-  name        = "geekzone"
-  subnet_ids  = module.vpc.database_subnets
+  name       = "geekzone"
+  subnet_ids = module.vpc.database_subnets
 
 }
 module "security_group" {
@@ -62,9 +55,9 @@ module "db" {
   subnet_ids             = module.vpc.database_subnets
   vpc_security_group_ids = [module.security_group.security_group_id]
 
-  maintenance_window              = "Mon:00:00-Mon:03:00"
-  backup_window                   = "03:00-06:00"
- # enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
+  maintenance_window = "Mon:00:00-Mon:03:00"
+  backup_window      = "03:00-06:00"
+  # enabled_cloudwatch_logs_exports = ["postgresql", "upgrade"]
 
   backup_retention_period = 0
   skip_final_snapshot     = true
@@ -96,4 +89,9 @@ module "db" {
   db_subnet_group_tags = {
     "Sensitive" = "high"
   }
+
+  depends_on = [
+    aws_db_subnet_group.geekzone
+  ]
+
 }

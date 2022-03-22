@@ -21,31 +21,36 @@ variable "map_users" {
     {
       userarn  = "arn:aws:iam::098281131088:user/carwyn"
       username = "carwyn"
-      groups   = ["system:masters"]  
+      groups   = ["system:masters"]
     },
     {
       userarn  = "arn:aws:iam::098281131088:user/james"
       username = "james"
-      groups   = ["system:masters"]  
+      groups   = ["system:masters"]
     },
     {
       userarn  = "arn:aws:iam::098281131088:user/sam"
       username = "sam"
-      groups   = ["system:masters"]  
+      groups   = ["system:masters"]
     },
     {
       userarn  = "arn:aws:iam::098281131088:user/bala"
       username = "bala"
-      groups   = ["system:masters"]  
+      groups   = ["system:masters"]
     },
     {
       userarn  = "arn:aws:iam::098281131088:user/circleci"
       username = "circleci"
-      groups   = ["system:masters"]  
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::098281131088:user/giulio"
+      username = "giulio"
+      groups   = ["system:masters"]
     }
-    
+
   ]
-} 
+}
 
 variable "db_name" {}     #Database name
 variable "db_username" {} #Database username
