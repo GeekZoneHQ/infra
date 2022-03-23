@@ -16,7 +16,6 @@ jobs:
           command: |
             cd aws/terraform-aws
             terraform init
-            terraform fmt 
             terraform validate
             terraform plan 
              
