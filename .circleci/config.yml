@@ -7,23 +7,23 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Create .terraformrc file locally
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-          name: Create .terraformrc file locally
-      # - terraform/install:
-      #     arch: amd64
-      #     os: linux
-      #     terraform_version: 1.0.5
       - run: 
           name: Terraform cycle
           command: |
             cd aws/terraform-aws
             terraform fmt 
+            terraform validate
             terraform init 
             terraform plan 
-            terraform apply -auto-approve
-            terraform destroy -auto-approve
+      #       terraform apply -auto-approve
+      # - run:
+      #     name: Destroy infrastructure
+      #       terraform destroy -auto-approve
+      #     command: terraform destroy -auto-approve
              
     working_directory: ~/src
 workflows:
