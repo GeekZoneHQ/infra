@@ -15,9 +15,9 @@ jobs:
           name: Terraform cycle
           command: |
             cd aws/terraform-aws
+            terraform init
             terraform fmt 
             terraform validate
-            terraform init 
             terraform plan 
              
     working_directory: ~/src
