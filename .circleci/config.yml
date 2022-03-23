@@ -14,7 +14,7 @@ jobs:
       - terraform/install:
           arch: amd64
           os: linux
-          terraform_version: 0.14.2
+          terraform_version: 1.0.5
       - terraform/fmt:
           path: .
       - terraform/validate:
