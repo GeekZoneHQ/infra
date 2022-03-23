@@ -28,7 +28,7 @@ jobs:
           path: aws/terraform-aws
       - terraform/destroy:
           path: aws/terraform-aws
-    working_directory: .
+    working_directory: ~/src
 workflows:
   single-job-lifecycle:
     jobs:
