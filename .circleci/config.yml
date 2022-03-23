@@ -19,11 +19,6 @@ jobs:
             terraform validate
             terraform init 
             terraform plan 
-      #       terraform apply -auto-approve
-      # - run:
-      #     name: Destroy infrastructure
-      #       terraform destroy -auto-approve
-      #     command: terraform destroy -auto-approve
              
     working_directory: ~/src
 workflows:
