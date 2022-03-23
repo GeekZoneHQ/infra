@@ -1,8 +1,8 @@
 version: 2.1
-orbs:
-  terraform: circleci/terraform@3.0.1
+# orbs:
+#   terraform: circleci/terraform@3.0.1
 jobs:
-  single-job-lifecycle:
+  terraform-cycle:
     executor: terraform/default
     steps:
       - checkout
@@ -15,24 +15,21 @@ jobs:
       #     arch: amd64
       #     os: linux
       #     terraform_version: 1.0.5
-      - terraform/fmt:
-          path: .
-      - terraform/validate:
-          path: .
-      - terraform/init:
-          backend: true
-          path: aws/terraform-aws
-      - terraform/plan:
-          path: aws/terraform-aws
-      - terraform/apply:
-          path: aws/terraform-aws
-      - terraform/destroy:
-          path: aws/terraform-aws
+      - run: 
+          name: Terraform cycle
+          command: >
+            cd aws/terraform-aws
+            terraform fmt 
+            terraform init 
+            terraform plan 
+            terraform apply -auto-approve
+            terraform destroy -auto-approve
+             
     working_directory: ~/src
 workflows:
-  single-job-lifecycle:
+  terraform-cycle:
     jobs:
-      - single-job-lifecycle:
+      - terraform-cycle:
           filters:
             branches:
               ignore: 
