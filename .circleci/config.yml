@@ -32,4 +32,9 @@ jobs:
 workflows:
   single-job-lifecycle:
     jobs:
-      - single-job-lifecycle
+      - single-job-lifecycle:
+          filters:
+            branches:
+              ignore: 
+              - /junk-.*/
+              - /doc-.*/
