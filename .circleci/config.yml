@@ -26,11 +26,10 @@ jobs:
              
     working_directory: ~/src
 workflows:
-  terraform-cycle:
+  main-infra:
     jobs:
       - terraform-cycle:
           filters:
             branches:
               ignore: 
               - /junk-.*/
-              - /doc-.*/
