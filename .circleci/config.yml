@@ -11,25 +11,31 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7     
+          version: 20.10.7    
       - run:
-          name: Build and push terraform infra images to repository
+          name: Build terraform aws-infra image 
+          background: true
           command: |
-            TF_FILES=$(curl -s -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/GeekZoneHQ/infra/pulls/17/files | jq '.[] | {filename} | values[]' | grep .tf | wc -l)
-            echo "The number of modified or added terraform files in this PR is $TF_FILES"
-
-            if [ "$TF_FILES" -gt 0 ]
-            then
-                circleci-agent step halt
-            else            
-                TAG="0.1.${CIRCLE_BUILD_NUM}"
-                docker build -t geekzone/aws-infra:$TAG -f docker/aws-infra/Dockerfile /home/circleci/project
-                docker build -t geekzone/azure-infra:$TAG -f docker/azure-infra/Dockerfile /home/circleci/project
-                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                docker push geekzone/aws-infra:$TAG
-                docker push geekzone/azure-infra:$TAG
-            fi
-  
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker build -t geekzone/aws-infra:$TAG -f docker/aws-infra/Dockerfile .  
+      - run:
+          name: Build terraform azure-infra image 
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker build -t geekzone/azure-infra:$TAG -f docker/azure-infra/Dockerfile .         
+      - deploy:
+          name: Push aws-infra image to Docker Hub
+          background: true
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker push geekzone/aws-infra:$TAG
+      - deploy:
+          name: Push azure-infra image to Docker Hub
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker push geekzone/azure-infra:$TAG
 
   terraform-cycle:
     executor: terraform/default
