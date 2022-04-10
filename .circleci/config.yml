@@ -2,6 +2,35 @@ version: 2.1
 orbs:
   terraform: circleci/terraform@3.0.1
 jobs:
+  build-publish:
+    docker:
+      - image: 'cimg/base:stable'
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7       
+      - run:
+          name: Build and push terraform infra images to repository
+          command: |
+            TF_FILES=$(curl -s -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/GeekZoneHQ/infra/pulls/17/files | jq '.[] | {filename} | values[]' | grep .tf | wc -l)
+            echo "The number of modified or added terraform files in this PR is $TF_FILES"
+            TOTAL_FILES=$(curl -s -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/GeekZoneHQ/infra/pulls/17/files | jq '.[] | {filename} | values[]' | wc -l)
+            echo "The total number of modified or added files in this PR is $TOTAL_FILES"
+
+            if [ "$TF_FILES" -eq "$TOTAL_FILES" ]; then
+                circleci-agent step halt
+            else            
+                TAG="0.1.${CIRCLE_BUILD_NUM}"
+                docker build -t geekzone/aws-infra:$TAG -f docker/aws-infra/Dockerfile .
+                docker build -t geekzone/azure-infra:$TAG -f docker/azure-infra/Dockerfile .
+                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                docker push geekzone/aws-infra:$TAG
+                docker push geekzone/azure-infra:$TAG
+            fi
+
   terraform-cycle:
     executor: terraform/default
     steps:
@@ -18,17 +47,24 @@ jobs:
             terraform init
             terraform validate
             terraform plan
-      #       terraform apply -auto-approve
-      # - run:
-      #     name: Destroy infrastructure
-      #       terraform destroy -auto-approve
-      #     command: terraform destroy -auto-approve
-             
+            cd ../../azure/terraform-azure
+            terraform init
+            terraform validate
+            terraform plan
     working_directory: ~/src
+
+    
 workflows:
   main-infra:
     jobs:
+      - build-publish:
+          filters:
+            branches:
+              ignore: 
+              - /junk-.*/
       - terraform-cycle:
+          requires:
+          - build-publish
           filters:
             branches:
               ignore: 
