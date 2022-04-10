@@ -7,7 +7,7 @@ WORKDIR /usr/src/terraform
 
 RUN adduser -D terraform
     
-COPY --chown=terraform:terraform azure/terraform-azure/ . 
+COPY --chown=terraform:terraform project/azure/terraform-azure/ . 
 
 RUN chmod -R 755 /usr/src/terraform/
 
