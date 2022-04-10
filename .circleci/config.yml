@@ -30,6 +30,8 @@ jobs:
                 docker push geekzone/aws-infra:$TAG
                 docker push geekzone/azure-infra:$TAG
             fi
+    working_directory: ~/project
+  
 
   terraform-cycle:
     executor: terraform/default
@@ -53,7 +55,7 @@ jobs:
             terraform plan
     working_directory: ~/src
 
-    
+
 workflows:
   main-infra:
     jobs:
