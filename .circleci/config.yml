@@ -18,7 +18,7 @@ jobs:
             TF_FILES=$(curl -s -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/GeekZoneHQ/infra/pulls/17/files | jq '.[] | {filename} | values[]' | grep .tf | wc -l)
             echo "The number of modified or added terraform files in this PR is $TF_FILES"
 
-            if [ "$TF_FILES" -eq 0 ]
+            if [ "$TF_FILES" -gt 0 ]
             then
                 circleci-agent step halt
             else            
