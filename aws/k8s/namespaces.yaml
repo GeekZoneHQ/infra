@@ -38,11 +38,7 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  labels:
-    app.kubernetes.io/name: keda
-    app.kubernetes.io/part-of: keda-operator
-    app.kubernetes.io/version: 2.0.0
-  name: keda
+  name: postgres
 
 ---
 
@@ -51,3 +47,9 @@ kind: Namespace
 metadata:
   name: external-dns
 
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: terraform
