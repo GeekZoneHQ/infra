@@ -4,9 +4,6 @@ metadata:
   name: ingress-prometheus
   namespace: monitoring
 spec:
-  tls:
-  - hosts:
-    - "prometheus.geek.zone"
   rules: 
   - host: prometheus.geek.zone
     http:

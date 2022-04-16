@@ -4,9 +4,6 @@ metadata:
   name: ingress-monitoring
   namespace: monitoring
 spec:
-  tls:
-  - hosts:
-    - "monitoring.geek.zone"
   rules: 
   - host: monitoring.geek.zone
     http:

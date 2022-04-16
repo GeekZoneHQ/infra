@@ -6,9 +6,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/app-root: /memberships/register 
 spec:
-  tls:
-  - hosts:
-    - "test.geek.zone"
   rules: 
   - host: test.geek.zone
     http:

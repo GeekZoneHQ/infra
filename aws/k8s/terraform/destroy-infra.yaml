@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: destroy-azure-infra 
+  name: destroy-aws-infra 
   namespace: terraform
 spec:
   schedule: "0 */4 * * *"
@@ -10,8 +10,8 @@ spec:
       template:
         spec:
           containers:
-          - name: destroy-azure-infra
-            image: geekzone/azure-infra
+          - name: destroy-aws-infra
+            image: geekzone/aws-infra
             imagePullPolicy: IfNotPresent
             command: ['terraform', 'destroy', '-auto-approve']
             volumeMounts:
