@@ -2,6 +2,41 @@ version: 2.1
 orbs:
   terraform: circleci/terraform@3.0.1
 jobs:
+  build-publish:
+    docker:
+      - image: 'cimg/base:stable'
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7    
+      - run:
+          name: Build terraform aws-infra image 
+          background: true
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker build -t geekzone/aws-infra:$TAG -f docker/aws-infra/Dockerfile .  
+      - run:
+          name: Build terraform azure-infra image 
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker build -t geekzone/azure-infra:$TAG -f docker/azure-infra/Dockerfile .         
+      - deploy:
+          name: Push aws-infra image to Docker Hub
+          background: true
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker push geekzone/aws-infra:$TAG
+      - deploy:
+          name: Push azure-infra image to Docker Hub
+          command: |
+            TAG="0.1.${CIRCLE_BUILD_NUM}"
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker push geekzone/azure-infra:$TAG
+
   terraform-cycle:
     executor: terraform/default
     steps:
@@ -18,18 +53,26 @@ jobs:
             terraform init
             terraform validate
             terraform plan
-      #       terraform apply -auto-approve
-      # - run:
-      #     name: Destroy infrastructure
-      #       terraform destroy -auto-approve
-      #     command: terraform destroy -auto-approve
-             
+            cd ../../azure/terraform-azure
+            terraform init
+            terraform validate
+            terraform plan
     working_directory: ~/src
+
+
 workflows:
   main-infra:
     jobs:
-      - terraform-cycle:
+      - build-publish:
           filters:
             branches:
               ignore: 
               - /junk-.*/
+      - terraform-cycle:
+          requires:
+          - build-publish
+          filters:
+            branches:
+              ignore: 
+              - /junk-.*/
+
