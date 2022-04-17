@@ -10,6 +10,10 @@ cd ../k8s/
 rm ~/.kube/config
 aws eks --region eu-west-2 update-kubeconfig --name GeekZoneCluster 
 kubectl apply -f namespaces.yaml
+envsubst < sealed-secrets/master-key-secret.yaml | sponge sealed-secrets/master-key-secret.yaml
+kubectl apply -f sealed-secrets/master-key-secret.yaml
+kubectl apply -f sealed-secrets/controller.yaml
+kubectl apply -f sealed-secrets/sealed-secrets.yaml
 kubectl apply -f aws-storage-class.yaml
 kubectl apply -f keda-2.5.0.yaml
 kubectl apply -f external-dns/

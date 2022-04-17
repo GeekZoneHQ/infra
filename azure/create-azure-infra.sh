@@ -9,6 +9,10 @@ terraform apply -auto-approve
 cd ../k8s/
 az aks get-credentials --resource-group geekzone --name GeekZoneCluster --admin
 kubectl apply -f namespaces.yaml
+envsubst < sealed-secrets/master-key-secret.yaml | sponge sealed-secrets/master-key-secret.yaml
+kubectl apply -f sealed-secrets/master-key-secret.yaml
+kubectl apply -f sealed-secrets/controller.yaml
+kubectl apply -f sealed-secrets/sealed-secrets.yaml
 kubectl apply -f ingress-nginx/
 sleep 30
 kubectl apply -f external-dns/
