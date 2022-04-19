@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # Launch k8s cluster in Azure
-cd terraform-azure/
+cd azure/terraform-azure/
 terraform init
 terraform apply -auto-approve
 
@@ -27,10 +27,12 @@ sleep 30
 kubectl apply -f rabbitmq/rabbitmq-cluster.yaml
 sleep 30
 kubectl apply -f rabbitmq/ingress-rabbitmq-mgmt.yaml
-export CELERY_BROKER_URL="amqp://$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.username}' | base64 --decode):$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.password}' | base64 --decode)@$(kubectl -n rabbitmq-system get service geek-zone-cluster -o jsonpath='{.spec.clusterIP}')"
-envsubst < celery/celery-secrets.yaml | sponge celery/celery-secrets.yaml
+export CELERY_BROKER_URL="amqp://$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.username}' | base64 --decode):$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.password}' | base64 --decode)@$(kubectl -n rabbitmq-system get service geek-zone-cluster -o jsonpath='{.spec.clusterIP}') | base64"
+kubectl -n celery get secrets celery-secrets -o yaml > celery/celery-secrets.yaml
+sed -i "s/"JENFTEVSWV9CUk9LRVJfVVJM/$CELERY_BROKER_URL/g" celery/celery-secrets.yaml
 kubectl apply -f celery/
 kubectl apply -f postgres/
 sleep 30
-envsubst < prod/prod-secrets.yaml | sponge prod/prod-secrets.yaml
+kubectl -n prod get secrets prod-secrets -o yaml > prod/prod-secrets.yaml
+sed -i "s/"JENFTEVSWV9CUk9LRVJfVVJM/$CELERY_BROKER_URL/g" prod/prod-secrets.yaml
 kubectl apply -f prod/

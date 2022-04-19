@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: destroy-azure-infra 
-  namespace: terraform
+  namespace: infra
 spec:
   schedule: "0 */4 * * *"
   jobTemplate:
@@ -11,12 +11,12 @@ spec:
         spec:
           containers:
           - name: destroy-azure-infra
-            image: geekzone/azure-infra
+            image: geekzone/infra
             imagePullPolicy: IfNotPresent
-            command: ['terraform', 'destroy', '-auto-approve']
+            command: ['destroy-azure-infra']
             volumeMounts:
             - name: terraform
-              mountPath: "/home/terraform"
+              mountPath: "/home/infra-admin"
               readOnly: true
           volumes:
           - name: terraform

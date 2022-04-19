@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # Reset CELERY_BROKER_URL to an environment variable
-cd k8s/
+cd azure/k8s/
 sed -i 's/"amqp.*"/"$CELERY_BROKER_URL"/' celery/celery-secrets.yaml
 sed -i 's/"amqp.*"/"$CELERY_BROKER_URL"/' prod/prod-secrets.yaml
 
