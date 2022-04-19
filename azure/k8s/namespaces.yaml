@@ -52,4 +52,4 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: terraform
+  name: infra
