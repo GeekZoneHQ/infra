@@ -29,7 +29,8 @@ kubectl apply -f rabbitmq/ingress-rabbitmq-mgmt.yaml
 export CELERY_BROKER_URL=$(echo -n "amqp://$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.username}' | base64 --decode):$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.password}' | base64 --decode)@$(kubectl -n rabbitmq-system get service geek-zone-cluster -o jsonpath='{.spec.clusterIP}')" | base64)
 kubectl -n celery get secrets celery-secrets -o yaml > celery/celery-secrets.yaml
 sed -i "s/JENFTEVSWV9CUk9LRVJfVVJM/$CELERY_BROKER_URL/g" celery/celery-secrets.yaml
-kubectl apply -f celery/
+kubectl apply -f celery/celery-secrets.yaml
+kubectl apply -f celery/celery-deploy.yaml
 kubectl apply -f postgres/
 sleep 30
 kubectl -n prod get secrets prod-secrets -o yaml > prod/prod-secrets.yaml
