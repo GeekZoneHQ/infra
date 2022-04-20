@@ -1,4 +1,3 @@
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -70,7 +69,7 @@ spec:
         command:
         - controller
         env: []
-        image: quay.io/bitnami/sealed-secrets-controller:v0.17.4
+        image: bitnami/sealed-secrets-controller
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
