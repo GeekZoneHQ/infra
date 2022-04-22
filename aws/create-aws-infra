@@ -4,29 +4,3 @@
 cd aws/terraform-aws/
 terraform init
 terraform apply -auto-approve
-
-# Create resources in the k8s cluster
-cd ../k8s/
-rm ~/.kube/config
-aws eks --region eu-west-2 update-kubeconfig --name GeekZoneCluster 
-kubectl apply -f namespaces.yaml
-envsubst < sealed-secrets/master-key-secret.yaml | sponge sealed-secrets/master-key-secret.yaml
-kubectl apply -f sealed-secrets/master-key-secret.yaml
-kubectl apply -f sealed-secrets/controller.yaml
-kubectl apply -f sealed-secrets/sealed-secrets.yaml
-kubectl apply -f aws-storage-class.yaml
-kubectl apply -f keda-2.5.0.yaml
-kubectl apply -f external-dns/
-kubectl apply -f ingress-nginx/
-kubectl apply -f rabbitmq/cluster-operator.yaml
-sleep 30
-kubectl apply -f rabbitmq/rabbitmq-cluster.yaml
-sleep 30
-kubectl apply -f rabbitmq/ingress-rabbitmq-mgmt.yaml
-export CELERY_BROKER_URL=$(echo -n "amqp://$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.username}' | base64 --decode):$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.password}' | base64 --decode)@$(kubectl -n rabbitmq-system get service geek-zone-cluster -o jsonpath='{.spec.clusterIP}')" | base64)
-kubectl -n celery get secrets celery-secrets -o yaml > celery/celery-secrets.yaml
-sed -i "s/JENFTEVSWV9CUk9LRVJfVVJM/$CELERY_BROKER_URL/g" celery/celery-secrets.yaml
-kubectl apply -f celery/
-kubectl -n prod get secrets prod-secrets -o yaml > prod/prod-secrets.yaml
-sed -i "s/JENFTEVSWV9CUk9LRVJfVVJM/$CELERY_BROKER_URL/g" prod/prod-secrets.yaml
-kubectl apply -f prod/
