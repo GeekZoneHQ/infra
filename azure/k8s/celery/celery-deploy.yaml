@@ -18,8 +18,10 @@ spec:
       containers:
       - envFrom:
           - secretRef:
+              name: celery-broker-url
+          - secretRef:
               name: celery-secrets 
-        image: geekzone/backend:0.1.1065
+        image: geekzone/backend:0.1.1823
         name: celery 
         command: ["sh", "-c", "celery -A web worker -l INFO"]
         resources:
