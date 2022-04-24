@@ -23,7 +23,7 @@ spec:
           value: "86400"
         - name: ES_HOST
           value: "elasticsearch-logging"
-        # - name: DELETE_AGE
-        #   value: "30"
+        - name: DELETE_AGE
+          value: "30"
 
           

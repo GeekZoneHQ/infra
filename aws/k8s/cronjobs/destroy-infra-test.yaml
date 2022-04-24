@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: destroy-aws-infra 
+  namespace: infra
+spec:
+  schedule: "0 */4 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: destroy-aws-infra
+            image: geekzone/infra
+            imagePullPolicy: IfNotPresent
+            command: ['destroy-aws-infra']
+            volumeMounts:
+            - name: terraform
+              mountPath: "/home/infra-admin"
+              readOnly: true
+          volumes:
+          - name: terraform
+            secret:
+              secretName: terraform
+              optional: false
+          restartPolicy: OnFailure
+    
+  
