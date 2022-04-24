@@ -38,6 +38,27 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: postgres
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: infra
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
   labels:
     app.kubernetes.io/name: keda
     app.kubernetes.io/part-of: keda-operator
@@ -49,5 +70,4 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: external-dns
-
+  name: cert-manager

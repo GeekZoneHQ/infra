@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+# Destroy k8s cluster in Azure
+cd azure/terraform-azure/
+terraform init
+terraform destroy -auto-approve
+
+
