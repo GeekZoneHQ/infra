@@ -17,7 +17,7 @@ kubectl apply -f rabbitmq/rabbitmq-cluster.yaml
 sleep 30
 kubectl apply -f rabbitmq/ingress-rabbitmq-mgmt.yaml
 export CELERY_BROKER_URL=$(echo -n "amqp://$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.username}' | base64 --decode):$(kubectl -n rabbitmq-system get secret geek-zone-cluster-default-user -o jsonpath='{.data.password}' | base64 --decode)@$(kubectl -n rabbitmq-system get service geek-zone-cluster -o jsonpath='{.spec.clusterIP}')")
-kubectl -n celery create secret generic celery-broker-url --from-literal=CELERY_BROKER_URL=$(echo $CELERY_BROKER_URL)
+envsubst < celery/celery-deploy.yaml | sponge celery/celery-deploy.yaml
 kubectl apply -f celery/
 export PR_NUMBER=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")
 envsubst < test-environment/deploy-test.yaml | sponge test-environment/deploy-test.yaml
