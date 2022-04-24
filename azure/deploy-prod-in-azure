@@ -3,8 +3,8 @@
 # Create resources in the k8s cluster
 cd azure/k8s/
 kubectl apply -f namespaces.yaml
-envsubst < sealed-secrets/master-key-secret.yaml | sponge sealed-secrets/master-key-secret.yaml
-kubectl apply -f sealed-secrets/master-key-secret.yaml
+envsubst < sealed-secrets/main-key-secret.yaml | sponge sealed-secrets/main-key-secret.yaml
+kubectl apply -f sealed-secrets/main-key-secret.yaml
 kubectl apply -f sealed-secrets/controller.yaml
 kubectl apply -f sealed-secrets/sealed-secrets.yaml
 kubectl apply -f ingress-nginx/
