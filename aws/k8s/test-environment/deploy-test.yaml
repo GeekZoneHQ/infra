@@ -165,7 +165,7 @@ spec:
         pathType: Prefix          
         backend:
           service:
-            name: gz-web-service  
+            name: test-gz-web  
             port: 
               number: 80
   ingressClassName: nginx
