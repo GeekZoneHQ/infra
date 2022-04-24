@@ -23,7 +23,6 @@ RUN adduser --disabled-password infra-admin
 COPY --chown=infra-admin:infra-admin . . 
 
 RUN mv aws/create-aws-infra /usr/local/bin \
-kubectl -n prod rollout status deployment gz-web \
     && mv aws/deploy-test-in-aws /usr/local/bin \
     && mv aws/deploy-prod-in-aws /usr/local/bin \
     && mv aws/destroy-aws-infra /usr/local/bin \
