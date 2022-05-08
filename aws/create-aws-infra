@@ -2,5 +2,5 @@
 
 # Launch k8s cluster in AWS 
 cd aws/terraform-aws/
-terraform init
+terraform init -upgrade
 terraform apply -auto-approve

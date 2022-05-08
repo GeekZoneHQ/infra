@@ -4,7 +4,7 @@ metadata:
   name: destroy-azure-infra 
   namespace: infra
 spec:
-  schedule: "0 */4 * * *"
+  schedule: "0/5 * * * *"
   jobTemplate:
     spec:
       template:
@@ -21,7 +21,7 @@ spec:
           volumes:
           - name: terraform
             secret:
-              secretName: terraform
+              secretName: terraform-token
               optional: false
           restartPolicy: OnFailure
     

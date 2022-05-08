@@ -21,7 +21,7 @@ spec:
           volumes:
           - name: terraform
             secret:
-              secretName: terraform
+              secretName: terraform-token
               optional: false
           restartPolicy: OnFailure
     

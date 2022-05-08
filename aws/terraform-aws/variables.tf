@@ -57,3 +57,6 @@ variable "db_username" {} #Database username
 variable "db_password" {} #Database password
 variable "db_port" {}     #Database port
 
+variable "AWS_ACCESS_KEY_ID" {}
+variable "AWS_SECRET_ACCESS_KEY" {}
+

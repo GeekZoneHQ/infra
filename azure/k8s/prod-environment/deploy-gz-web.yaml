@@ -4,7 +4,7 @@ stringData:
 kind: Secret
 metadata:
   name: celery-broker-url
-  namespace: celery
+  namespace: prod
 type: Opaque
 
 ---
