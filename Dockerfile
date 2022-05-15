@@ -3,7 +3,7 @@ FROM ubuntu:focal-20220404
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
-    && apt install apt-utils gnupg2 gettext-base moreutils -y \
+    && apt install apt-utils gnupg2 gettext-base moreutils git-all -y \
     && apt install software-properties-common zip unzip curl azure-cli -y
 
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
