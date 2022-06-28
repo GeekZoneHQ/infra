@@ -32,8 +32,8 @@ else
       sudo curl -u ${CIRCLECI_TOKEN}: -X POST --header "Content-Type: application/json" -d '{
         "branch": "${CIRCLE_BRANCH}",
         "parameters": {     
-        "deploy_switcher_infra_aws": false,
-        "deploy_switcher_infra_azure": true,     
+        "deploy_infra_aws": false,
+        "deploy_infra_azure": true,     
         "main_infra_build": false
         }
       }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/web/pipeline

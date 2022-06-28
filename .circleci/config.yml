@@ -13,10 +13,10 @@ executors:
 # Set parameter here
 # main_infra_build - always run for the main build
 parameters:
-  deploy_switcher_health_infra_aws:
+  deploy_infra_aws:
     type: boolean
     default: false
-  deploy_switcher_health_infra_azure:
+  deploy_infra_azure:
     type: boolean
     default: false
   main_infra_build:
@@ -106,7 +106,7 @@ jobs:
           name: Terraform Validate & Format
           command: |
             cd ./terraform/
-            terraform init
+            terraform init -upgrade
             terraform fmt
             terraform validate
       - run:
@@ -116,7 +116,7 @@ jobs:
             terraform plan
             terraform apply -auto-approve
 
-  deploy_switcher_health_infra_aws_job:
+  deploy_infra_aws_job:
     executor: terraform-executor
     steps:      
       - checkout
@@ -132,7 +132,7 @@ jobs:
             terraform validate
             terraform plan
 
-  deploy_switcher_health_infra_azure_job:
+  deploy_infra_azure_job:
     executor: terraform-executor
     steps:      
       - checkout
@@ -143,7 +143,7 @@ jobs:
           name: Create .terraformrc file locally
           command: >-
             echo " run the AZURE infra"
-            cd ../../azure/terraform-azure
+            cd azure/terraform-azure
             terraform init -upgrade
             terraform validate
             terraform plan 
@@ -173,9 +173,9 @@ workflows:
           context:
             - org-global
   deploy_switcher_infra_aws:
-    when: << pipeline.parameters.deploy_switcher_health_infra_aws >>  
+    when: << pipeline.parameters.deploy_infra_aws >>  
     jobs:
-      - deploy_switcher_health_infra_aws_job:
+      - deploy_infra_aws_job:
           filters:
               branches:
                 ignore: 
@@ -183,10 +183,10 @@ workflows:
                 - /doc-.*/
           context:
             - org-global
-  deploy_switcher_infra_azure:
-    when: << pipeline.parameters.deploy_switcher_health_infra_azure >>  
+  deploy_infra_azure:
+    when: << pipeline.parameters.deploy_infra_azure >>  
     jobs:
-      - deploy_switcher_health_infra_azure_job:
+      - deploy_infra_azure_job:
           filters:
               branches:
                 ignore: 
