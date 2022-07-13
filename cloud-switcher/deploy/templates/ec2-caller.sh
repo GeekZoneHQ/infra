@@ -36,7 +36,7 @@ else
         "deploy_infra_azure": true,     
         "main_infra_build": false
         }
-      }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/web/pipeline
+      }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline
   fi
   done
 fi
