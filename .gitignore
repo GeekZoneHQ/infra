@@ -1,12 +1,5 @@
-# Local .terraform directories
-**/.terraform/*
-
-# .tfstate files
-terraform/*.tfstate
-terraform/*.tfstate.*
-
 # Crash log files
-terraform/crash.log
+cloud-switcher/crash.log
 
 # Ignore any .tfvars files that are generated automatically for each Terraform run. Most
 # .tfvars files are managed as part of configuration and so should be included in
@@ -16,9 +9,7 @@ terraform/crash.log
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
-terraform/override.tf
-terraform/override.tf.json
-terraform/*_override.tf
-terraform/*_override.tf.json
-terraform/.terraform.lock.hcl
+cloud-switcher/.terraform/providers/
+cloud-switcher/.terraform.lock.*
+
 

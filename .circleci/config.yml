@@ -2,13 +2,6 @@ version: 2.1
 orbs:
   terraform: circleci/terraform@3.0.1
 
-executors:
-  terraform-executor:
-    docker:
-      - image: cimg/base:stable
-        auth:
-          username: $DOCKER_USERNAME
-          password: $DOCKER_PASSWORD 
 
 # Set parameter here
 # main_infra_build - always run for the main build
@@ -24,28 +17,19 @@ parameters:
     default: true
 
 aliases:
-  - &show-current-branch-name
-    run:
-      name: Show current branch
-      command: echo ${CIRCLE_BRANCH}
-  - &install-dependencies
+  - &install-dependencies-execute
     run:
       name: Install dependencies
       command: |
+        echo ${CIRCLE_BRANCH}
         sudo curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
         sudo apt-get install terraform -y
-        sudo apt install gettext-base moreutils -y
-        sudo apt install openssl -y
-  - &install-dependencies2
-    run:
-      name: Install dependencies2
-      command: |
-            sudo apt-get update
-            sudo apt install gettext-base moreutils
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
+        sudo apt install gettext-base moreutils openssl -y        
+        sudo apt-get update        
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
 
 jobs:
   terraform-cycle:
@@ -91,12 +75,10 @@ jobs:
             docker push geekzone/infra
 
   init-switcher-job: 
-    executor: terraform-executor
+    executor: terraform/default
     steps:      
-      - checkout
-      - *show-current-branch-name
-      - *install-dependencies
-      - *install-dependencies2
+      - checkout      
+      - *install-dependencies-execute
       - run:
           name: Create .terraformrc file locally
           command: >-
@@ -105,27 +87,20 @@ jobs:
       - run:
           name: Terraform Validate & Format
           command: |
-            cd ./terraform/
+            cd ./cloud-switcher/
             terraform init -upgrade
             terraform fmt
             terraform validate
-      - run:
-          name: Terraform Plan & Apply
-          command: |
-            cd ./terraform/
             terraform plan
             terraform apply -auto-approve
 
   deploy_infra_aws_job:
-    executor: terraform-executor
+    executor: terraform/default
     steps:      
       - checkout
-      - *show-current-branch-name
-      - *install-dependencies
-      - *install-dependencies2
       - run:
-          name: Create .terraformrc file locally
-          command: >-
+          name: Terraform run aws infra
+          command: |
             echo " run the AWS infra"
             cd aws/terraform-aws
             terraform init -upgrade
@@ -133,15 +108,12 @@ jobs:
             terraform plan
 
   deploy_infra_azure_job:
-    executor: terraform-executor
+    executor: terraform/default
     steps:      
       - checkout
-      - *show-current-branch-name
-      - *install-dependencies
-      - *install-dependencies2
       - run:
           name: Create .terraformrc file locally
-          command: >-
+          command: |
             echo " run the AZURE infra"
             cd azure/terraform-azure
             terraform init -upgrade
@@ -168,10 +140,12 @@ workflows:
           requires:
           - build-publish
           filters:
-              branches:
-                only: /main*/
-          context:
-            - org-global
+            branches:
+              ignore: 
+              - /junk-.*/
+              - /doc-.*/              
+              # only: /main*/
+
   deploy_switcher_infra_aws:
     when: << pipeline.parameters.deploy_infra_aws >>  
     jobs:
@@ -181,8 +155,7 @@ workflows:
                 ignore: 
                 - /junk-.*/
                 - /doc-.*/
-          context:
-            - org-global
+
   deploy_infra_azure:
     when: << pipeline.parameters.deploy_infra_azure >>  
     jobs:
@@ -192,5 +165,4 @@ workflows:
                 ignore: 
                 - /junk-.*/
                 - /doc-.*/
-          context:
-            - org-global
+
