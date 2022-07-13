@@ -2,6 +2,13 @@ version: 2.1
 orbs:
   terraform: circleci/terraform@3.0.1
 
+executors:
+  terraform-executor:
+    docker:
+      - image: cimg/base:stable
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD 
 
 # Set parameter here
 # main_infra_build - always run for the main build
@@ -21,12 +28,11 @@ aliases:
     run:
       name: Install dependencies
       command: |
-        echo ${CIRCLE_BRANCH}
-        apt-get install sudo
+        echo ${CIRCLE_BRANCH}        
         sudo curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
         sudo apt-get install terraform -y
-        sudo apt install gettext-base moreutils openssl -y        
+        sudo apt install gettext-base moreutils openssl -y
         sudo apt-get update        
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
         unzip awscliv2.zip
@@ -76,7 +82,7 @@ jobs:
             docker push geekzone/infra
 
   init-switcher-job: 
-    executor: terraform/default
+    executor: terraform-executor
     steps:      
       - checkout      
       - *install-dependencies-execute
@@ -96,12 +102,12 @@ jobs:
             terraform apply -auto-approve
 
   deploy_infra_aws_job:
-    executor: terraform/default
+    executor: terraform-executor
     steps:      
       - checkout
       - run:
           name: Terraform run aws infra
-          command: |
+          command: >-
             echo " run the AWS infra"
             cd aws/terraform-aws
             terraform init -upgrade
@@ -109,12 +115,12 @@ jobs:
             terraform plan
 
   deploy_infra_azure_job:
-    executor: terraform/default
+    executor: terraform-executor
     steps:      
       - checkout
       - run:
           name: Create .terraformrc file locally
-          command: |
+          command: >-
             echo " run the AZURE infra"
             cd azure/terraform-azure
             terraform init -upgrade
