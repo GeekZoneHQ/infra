@@ -66,10 +66,10 @@ resource "aws_security_group" "allow-ssh-and-egress" {
   description = "Allows SSH traffic into instances as well as all egress."
   vpc_id      = aws_vpc.gz-vpc.id
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip]
 
   }
 
