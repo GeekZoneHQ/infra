@@ -127,7 +127,8 @@ resource "aws_instance" "gz_instance" {
   associate_public_ip_address = true
   user_data                   = data.cloudinit_config.gz_cloudinit.rendered
   tags = {
-    Name = "$K8S_NS_NAME"
+    # Name = "$K8S_NS_NAME"
+    Name = "${var.env_prefix}-ec2"
   }
 }
 
