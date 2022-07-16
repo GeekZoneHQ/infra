@@ -94,11 +94,9 @@ jobs:
       - run:
           name: Fill out template variables in yaml files
           command: |
-            export CIRCLECI_TOKEN=$(echo ${CIRCLECI_TOKEN})            
-            envsubst < ./cloud-switcher/deploy/templates/ec2-caller.sh | sponge ./cloud-switcher/deploy/templates/ec2-caller.sh
-            export K8S_NS_NAME=$(echo "pr${CIRCLE_PULL_REQUEST##*/}")-${CIRCLE_PROJECT_REPONAME}
-            envsubst < ./cloud-switcher/deploy/templates/user-data.sh | sponge ./cloud-switcher/deploy/templates/user-data.sh
-            envsubst < ./cloud-switcher/main.tf | sponge ./cloud-switcher/main.tf
+            export CIRCLECI_TOKEN=$(echo ${CIRCLECI_TOKEN})
+            cat ./cloud-switcher/deploy/templates/ec2-caller_1.sh | envsubst '${CIRCLE_BRANCH} ${CIRCLECI_TOKEN}' > ./cloud-switcher/deploy/templates/ec2-caller.sh
+            
       - run:
           name: Terraform Validate & Format
           command: |

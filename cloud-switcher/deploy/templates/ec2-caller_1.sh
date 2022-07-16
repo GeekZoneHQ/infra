@@ -10,7 +10,7 @@ Need to implement the trigger mechanism once the AWS is spic and span
 '
 export CIRCLECI_TOKEN=$(echo ${CIRCLECI_TOKEN})
 
-httpUrl="https://geek.zone"
+httpUrl="https://test.geek.zone"
 rep=$(sudo curl -s -o /dev/null -w "%{http_code}"  $httpUrl)
 
 i=0
