@@ -16,31 +16,39 @@ rep=$(sudo curl -s -o /dev/null -w "%{http_code}"  $httpUrl)
 i=0
 result=0
 
-if [ $rep == 200 ]
+if [ "$rep" -eq 200 ]
 then
   echo " The website is healthy"
+  exit 0
 else  
-  while [ i -le 10]
+  while [ $i -le 5 ]
   do
-  (( i++ ))
-  sleep 10
+  i=$(( i+1 ))	 # increment $i
+  date
   rep=$(sudo curl -s -o /dev/null -w "%{http_code}"  $httpUrl)
 
-  if [ $rep == 200 ]
+  if [ "$rep" -eq 200 ]
+  then
+     echo " The website is healthy"
      exit 0
-  elif [ i -ge 10 ]
+  else 
+    if [ $i -ge 5 ]
+    then
+    	echo "Trigger the restart $i times."
       sudo curl -u ${CIRCLECI_TOKEN}: -X POST --header "Content-Type: application/json" -d '{
-        "branch": "${CIRCLE_BRANCH}",
-        "parameters": {     
-        "deploy_infra_aws": false,
-        "deploy_infra_azure": true,     
-        "main_infra_build": false
-        }
-      }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline
+          "branch": "${CIRCLE_BRANCH}",
+          "parameters": {     
+          "deploy_infra_aws": false,
+          "deploy_infra_azure": true,     
+          "main_infra_build": false
+          }
+        }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline
+      date
+  	  sleep 10
+  	  date
+  	  exit 0
+    fi
   fi
   done
 fi
-
-
-
 
