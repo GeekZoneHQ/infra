@@ -78,10 +78,10 @@ resource "aws_security_group" "allow-ssh-and-egress" {
   description = "Allows SSH traffic into instances as well as all egress."
   vpc_id      = aws_vpc.gz-vpc.id
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip]
 
   }
 
@@ -136,7 +136,7 @@ resource "aws_instance" "gz_instance" {
   subnet_id                   = aws_subnet.my-dev-subnet-1.id
   vpc_security_group_ids      = [aws_security_group.allow-ssh-and-egress.id]
   availability_zone           = var.avail_zone
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   user_data                   = data.cloudinit_config.gz_cloudinit.rendered
   tags = {    
     Name = "${var.env_prefix}-ec2"
