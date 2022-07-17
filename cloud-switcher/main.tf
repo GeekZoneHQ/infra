@@ -36,8 +36,20 @@ resource "aws_internet_gateway" "dev_demo_igw" {
 resource "aws_subnet" "my-dev-subnet-1" {
   vpc_id     = aws_vpc.gz-vpc.id
   cidr_block = var.subnet_cidr_block
+  map_public_ip_on_launch = "false"
   tags = {
     Name = "${var.env_prefix}-subnet-1"
+  }
+  availability_zone = var.avail_zone
+}
+
+// subnet - public
+resource "aws_subnet" "my-dev-subnet-" {
+  vpc_id     = aws_vpc.gz-vpc.id
+  cidr_block = var.subnet_public_cidr_block
+  map_public_ip_on_launch = "true"
+  tags = {
+    Name = "${var.env_prefix}-public-subnet-2"
   }
   availability_zone = var.avail_zone
 }
@@ -76,9 +88,9 @@ resource "aws_security_group" "allow-ssh-and-egress" {
 
   // allow any traffic outside
   egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     cidr_blocks     = ["0.0.0.0/0"]
     prefix_list_ids = []
   }

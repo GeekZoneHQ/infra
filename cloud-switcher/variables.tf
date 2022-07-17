@@ -10,12 +10,13 @@ variable "profile" {
   description = "Cloud switcher - EC2 access"
   default     = "bala-us-east"
 }
-
+variable "subnet_public_cidr_block" {}
 variable "vpc_cidr_block" {}
 variable "public_key_location" {}
 variable "avail_zone" {}
 
 variable "subnet_cidr_block" {}
+variable "subnet_public_cidr_block" {}
 
 variable "my_ip" {}
 
