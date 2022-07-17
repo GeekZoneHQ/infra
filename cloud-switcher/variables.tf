@@ -16,7 +16,7 @@ variable "public_key_location" {}
 variable "avail_zone" {}
 
 variable "subnet_cidr_block" {}
-variable "subnet_public_cidr_block" {}
+
 
 variable "my_ip" {}
 
