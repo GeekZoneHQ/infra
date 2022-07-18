@@ -10,27 +10,29 @@ Need to implement the trigger mechanism once the AWS is spic and span
 '
 export CIRCLECI_TOKEN=$(echo ${CIRCLECI_TOKEN})
 
-httpUrl="https://geek.zone"
-rep=$(sudo curl -s -o /dev/null -w "%{http_code}"  $httpUrl)
-
 i=0
 result=0
 
-if [ $rep == 200 ]
+if [ $(sudo curl --write-out %{http_code} --silent --output /dev/null "https://test.geek.zone" ) -eq 200 ]
 then
   echo " The website is healthy"
 else  
-  while [ i -le 10]
+  while [ "$i" -le 5 ]
   do
-  (( i++ ))
-  sleep 10
-  rep=$(sudo curl -s -o /dev/null -w "%{http_code}"  $httpUrl)
-
-  if [ $rep == 200 ]
+  i=$(( i + 1 ))
+  echo $i
+  date
+    
+  if [ $(sudo curl --write-out %{http_code} --silent --output /dev/null "https://test.geek.zone" ) -eq 200 ]
+  then
      exit 0
-  elif [ i -ge 10 ]
+  elif [ "$i" -ge 5 ]
+  then
+      echo $i
+      date
+      echo "success"
       sudo curl -u ${CIRCLECI_TOKEN}: -X POST --header "Content-Type: application/json" -d '{
-        "branch": "${CIRCLE_BRANCH}",
+        "branch": "br_cloud_switcher",
         "parameters": {     
         "deploy_infra_aws": false,
         "deploy_infra_azure": true,     
@@ -40,7 +42,4 @@ else
   fi
   done
 fi
-
-
-
 
