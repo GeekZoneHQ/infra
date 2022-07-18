@@ -11,5 +11,7 @@ cloud-switcher/crash.log
 # are not checked in
 cloud-switcher/.terraform/providers/
 cloud-switcher/.terraform.lock.*
+cloud-switcher/.terraform/*
+*.tfstate
 
 

@@ -10,45 +10,37 @@ Need to implement the trigger mechanism once the AWS is spic and span
 '
 export CIRCLECI_TOKEN=$(echo ${CIRCLECI_TOKEN})
 
-httpUrl="https://test.geek.zone"
+httpUrl="https://geek.zone"
 rep=$(sudo curl -s -o /dev/null -w "%{http_code}"  $httpUrl)
 
 i=0
 result=0
 
-if [ "$rep" -eq 200 ]
+if [ $rep == 200 ]
 then
   echo " The website is healthy"
-  exit 0
 else  
-  while [ $i -le 5 ]
+  while [ i -le 10]
   do
-  i=$(( i+1 ))	 # increment $i
-  date
+  (( i++ ))
+  sleep 10
   rep=$(sudo curl -s -o /dev/null -w "%{http_code}"  $httpUrl)
 
-  if [ "$rep" -eq 200 ]
-  then
-     echo " The website is healthy"
+  if [ $rep == 200 ]
      exit 0
-  else 
-    if [ $i -ge 5 ]
-    then
-    	echo "Trigger the restart $i times."
+  elif [ i -ge 10 ]
       sudo curl -u ${CIRCLECI_TOKEN}: -X POST --header "Content-Type: application/json" -d '{
-          "branch": "${CIRCLE_BRANCH}",
-          "parameters": {     
-          "deploy_infra_aws": false,
-          "deploy_infra_azure": true,     
-          "main_infra_build": false
-          }
-        }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline
-      date
-  	  sleep 10
-  	  date
-  	  exit 0
-    fi
+        "branch": "${CIRCLE_BRANCH}",
+        "parameters": {     
+        "deploy_infra_aws": false,
+        "deploy_infra_azure": true,     
+        "main_infra_build": false
+        }
+      }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline
   fi
   done
 fi
+
+
+
 

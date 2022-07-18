@@ -18,8 +18,6 @@ provider "aws" {
 // vpc
 resource "aws_vpc" "gz-vpc" {
   cidr_block = var.vpc_cidr_block
-  enable_dns_support = true
-  enable_dns_hostnames = true
   tags = {
     Name = "${var.env_prefix}-vpc"
   }
@@ -38,14 +36,11 @@ resource "aws_internet_gateway" "dev_demo_igw" {
 resource "aws_subnet" "my-dev-subnet-1" {
   vpc_id     = aws_vpc.gz-vpc.id
   cidr_block = var.subnet_cidr_block
-  map_public_ip_on_launch = "true"
   tags = {
     Name = "${var.env_prefix}-subnet-1"
   }
   availability_zone = var.avail_zone
 }
-
-
 
 
 resource "aws_route_table" "dev_demo_route_table" {
@@ -81,25 +76,9 @@ resource "aws_security_group" "allow-ssh-and-egress" {
 
   // allow any traffic outside
   egress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
-    prefix_list_ids = []
-  }
-
-  egress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
-    prefix_list_ids = []
-  }
-
-  egress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "80"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
     prefix_list_ids = []
   }
@@ -147,7 +126,8 @@ resource "aws_instance" "gz_instance" {
   availability_zone           = var.avail_zone
   associate_public_ip_address = true
   user_data                   = data.cloudinit_config.gz_cloudinit.rendered
-  tags = {    
+  tags = {
+    # Name = "$K8S_NS_NAME"
     Name = "${var.env_prefix}-ec2"
   }
 }
