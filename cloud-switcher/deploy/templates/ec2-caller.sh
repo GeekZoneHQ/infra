@@ -38,7 +38,12 @@ else
         "deploy_infra_azure": true,     
         "main_infra_build": false
         }
-      }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline
+      }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline      
+      echo "success and reset"
+      date
+      sudo mv /home/ubuntu/ec2-caller.sh /home/ubuntu/ec2-caller_1.sh      
+      date 
+      echo "success and reset"
   fi
   done
 fi
