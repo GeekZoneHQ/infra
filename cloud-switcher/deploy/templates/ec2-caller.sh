@@ -22,11 +22,10 @@ else
   i=$(( i + 1 ))
   echo $i
   date
-    
   if [ $(sudo curl --write-out %{http_code} --silent --output /dev/null "https://test.geek.zone" ) -eq 200 ]
   then
      exit 0
-  elif [ "$i" -ge 5 ]
+  elif [ "$i" -g 5 ]
   then
       echo $i
       date
@@ -41,9 +40,6 @@ else
       }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline      
       echo "success and reset"
       date
-      sudo mv /home/ubuntu/ec2-caller.sh /home/ubuntu/ec2-caller_1.sh      
-      date 
-      echo "success and reset"
   fi
   done
 fi

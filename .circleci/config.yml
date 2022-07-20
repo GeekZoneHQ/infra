@@ -128,7 +128,12 @@ jobs:
       - checkout
       - run:
           name: Create .terraformrc file locally
-          command: >-
+          command: |
+            cd ./cloud-switcher/
+            terraform init -upgrade
+            terraform fmt
+            terraform validate
+            terraform destroy -auto-approve
             echo " run the AZURE infra"
             cd azure/terraform-azure
             terraform init -upgrade
