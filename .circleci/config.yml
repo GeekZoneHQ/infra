@@ -126,6 +126,12 @@ jobs:
     executor: terraform-executor
     steps:      
       - checkout
+      - *install-dependencies-execute
+      - run:
+          name: Create .terraformrc file locally
+          command: >-
+            echo "credentials \"app.terraform.io\" {token =
+            \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc      
       - run:
           name: Create .terraformrc file locally
           command: |
@@ -133,7 +139,8 @@ jobs:
             cd azure/terraform-azure
             terraform init -upgrade
             terraform validate
-            terraform plan 
+            terraform plan
+            # terraform apply -auto-approve 
  
 workflows:
   main-infra:

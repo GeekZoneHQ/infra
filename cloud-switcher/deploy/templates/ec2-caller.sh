@@ -41,7 +41,7 @@ else
       }' https://circleci.com/api/v2/project/gh/GeekZoneHQ/infra/pipeline      
       echo "success and reset"
       date
-      mv /home/ubuntu/ec2-caller.sh /home/ubuntu/ec2-caller-1.sh
+      sudo systemctl stop cron
       date
   fi
   done
