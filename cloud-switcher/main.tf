@@ -127,10 +127,8 @@ resource "aws_instance" "gz_instance" {
   subnet_id                   = aws_subnet.my-dev-subnet-1.id
   vpc_security_group_ids      = [aws_security_group.allow-ssh-and-egress.id]
   availability_zone           = var.avail_zone
-  # associate_public_ip_address = true
   user_data                   = data.cloudinit_config.gz_cloudinit.rendered
   tags = {
-    # Name = "$K8S_NS_NAME"
     Name = "${var.env_prefix}-ec2"
   }
 }
