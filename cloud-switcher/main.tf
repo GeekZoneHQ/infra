@@ -17,8 +17,8 @@ provider "aws" {
 
 // vpc
 resource "aws_vpc" "gz-vpc" {
-  cidr_block = var.vpc_cidr_block
-  enable_dns_support = true
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
     Name = "${var.env_prefix}-vpc"
@@ -26,23 +26,23 @@ resource "aws_vpc" "gz-vpc" {
 }
 
 
-resource "aws_internet_gateway" "dev_demo_igw" {
+resource "aws_internet_gateway" "internet-gw" {
   vpc_id = aws_vpc.gz-vpc.id
   tags = {
-    Name = "${var.env_prefix}-igw"
+    Name = "${var.env_prefix}-internet-gw"
   }
 }
 
 
-// subnet
-resource "aws_subnet" "my-dev-subnet-1" {
-  vpc_id     = aws_vpc.gz-vpc.id
-  cidr_block = var.subnet_cidr_block
+// subnet - public
+resource "aws_subnet" "public-subnet" {
+  vpc_id                  = aws_vpc.gz-vpc.id
+  cidr_block              = var.subnet_cidr_block
   map_public_ip_on_launch = "true"
+  availability_zone       = var.avail_zone
   tags = {
-    Name = "${var.env_prefix}-subnet-1"
+    Name = "${var.env_prefix}-public-subnet"
   }
-  availability_zone = var.avail_zone
 }
 
 
@@ -50,16 +50,30 @@ resource "aws_route_table" "dev_demo_route_table" {
   vpc_id = aws_vpc.gz-vpc.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.dev_demo_igw.id
+    gateway_id = aws_internet_gateway.internet-gw.id
   }
   tags = {
     Name = "${var.env_prefix}-rtb"
   }
 }
 
-resource "aws_route_table_association" "a-rtb-subnet" {
-  subnet_id      = aws_subnet.my-dev-subnet-1.id
+resource "aws_route_table_association" "public-subnet-rt-association" {
+  subnet_id      = aws_subnet.public-subnet.id
   route_table_id = aws_route_table.dev_demo_route_table.id
+}
+
+
+
+
+// subnet - private
+resource "aws_subnet" "private-subnet" {
+  vpc_id                  = aws_vpc.gz-vpc.id
+  cidr_block              = var.subnet_cidr_block_private
+  map_public_ip_on_launch = "false"
+  tags = {
+    Name = "${var.env_prefix}-private-subnet"
+  }
+  availability_zone = var.avail_zone
 }
 
 
@@ -72,7 +86,7 @@ resource "aws_security_group" "allow-ssh-and-egress" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
+    cidr_blocks = ["0.0.0.0/0"]
 
   }
 
@@ -120,19 +134,62 @@ data "cloudinit_config" "gz_cloudinit" {
 /*
   provision an ec2 instance and will need to  trigger the circleci
 */
-resource "aws_instance" "gz_instance" {
+resource "aws_instance" "bastion-instance" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.aws_instance_type
   key_name                    = aws_key_pair.main.key_name
-  subnet_id                   = aws_subnet.my-dev-subnet-1.id
+  subnet_id                   = aws_subnet.public-subnet.id
+  vpc_security_group_ids      = [aws_security_group.allow-ssh-and-egress.id]
+  availability_zone           = var.avail_zone
+  associate_public_ip_address = true
+  # user_data                   = data.cloudinit_config.gz_cloudinit.rendered
+  tags = {
+    Name = "bastion-instance"
+  }
+}
+
+
+resource "aws_instance" "private-instance" {
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = var.aws_instance_type
+  key_name                    = aws_key_pair.main.key_name
+  subnet_id                   = aws_subnet.private-subnet.id
   vpc_security_group_ids      = [aws_security_group.allow-ssh-and-egress.id]
   availability_zone           = var.avail_zone
   associate_public_ip_address = false
   user_data                   = data.cloudinit_config.gz_cloudinit.rendered
-  tags = {  
-    Name = "${var.env_prefix}-ec2"
+  tags = {
+    Name = "private-instance"
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

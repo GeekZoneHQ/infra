@@ -17,6 +17,8 @@ variable "avail_zone" {}
 
 variable "subnet_cidr_block" {}
 
+variable "subnet_cidr_block_private" {}
+
 variable "my_ip" {}
 
 variable "aws_instance_type" {}
