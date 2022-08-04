@@ -6,7 +6,7 @@ resource "aws_db_subnet_group" "geekzone" {
 }
 module "security_group" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 3"
+  version = "~> 4.0"
 
   name        = local.db_name
   description = "Complete PostgreSQL example security group"
@@ -34,12 +34,13 @@ module "db" {
   source = "terraform-aws-modules/rds/aws"
 
   identifier = local.db_name
+  version = "4.7.0"
 
   # All available versions: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts
   engine               = "postgres"
-  engine_version       = "12.7"
-  family               = "postgres12" # DB parameter group
-  major_engine_version = "12"         # DB option group
+  engine_version       = "14.1"
+  family               = "postgres14" # DB parameter group
+  major_engine_version = "14"          # DB option group
   instance_class       = "db.t2.micro"
 
   allocated_storage     = 10

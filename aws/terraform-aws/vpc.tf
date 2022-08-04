@@ -27,7 +27,7 @@ locals {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.66.0"
+  version = "~> 3.0"
 
   name             = "GeekZoneVPC"
   cidr             = "10.0.0.0/16"
