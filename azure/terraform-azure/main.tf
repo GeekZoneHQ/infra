@@ -87,8 +87,8 @@ module "aks" {
   resource_group_name              = azurerm_resource_group.geekzone.name
   client_id                        = var.client_id
   client_secret                    = var.client_secret
-  kubernetes_version               = "1.21.7"
-  orchestrator_version             = "1.21.7"
+  kubernetes_version               = "1.26.0"
+  orchestrator_version             = "1.26.0"
   prefix                           = "prefix"
   cluster_name                     = "GeekZoneCluster"
   network_plugin                   = "azure"
