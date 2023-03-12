@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/app-root: /memberships/register 
 spec:
   rules: 
-  - host: test.geek.zone
+  - host: join.geek.zone
     http:
       paths:
       - path: /

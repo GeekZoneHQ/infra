@@ -8,9 +8,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - "test.geek.zone"
+    - "join.geek.zone"
   rules: 
-  - host: test.geek.zone
+  - host: join.geek.zone
     http:
       paths:
       - path: /

@@ -83,7 +83,7 @@ metadata:
   name: gz-web-service
   namespace: prod
   annotations:
-    external-dns.alpha.kubernetes.io/hostname: test.geek.zone
+    external-dns.alpha.kubernetes.io/hostname: join.geek.zone
 #    external-dns.alpha.kubernetes.io/ttl: "120" #optional
 spec:
   type: ClusterIP
