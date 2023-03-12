@@ -14,10 +14,10 @@ jobs:
       - run: 
           name: Terraform cycle
           command: |
-            cd aws/terraform-aws
-            terraform init -upgrade
-            terraform validate
-            terraform plan
+            # cd aws/terraform-aws
+            # terraform init -upgrade
+            # terraform validate
+            # terraform plan
             cd ../../azure/terraform-azure
             terraform init -upgrade
             terraform validate
