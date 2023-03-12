@@ -14,7 +14,7 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
 
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - \
     && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
-    && apt-get update && apt-get install terraform=1.2.8 -y
+    && apt-get update && apt-get install terraform=1.1.4 -y
 
 WORKDIR /usr/src/infra
 
