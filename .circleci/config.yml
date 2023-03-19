@@ -18,7 +18,6 @@ jobs:
             terraform init
             terraform validate
             terraform plan
-            sleep 600
     working_directory: ~/src
 
   build-publish:
