@@ -41,16 +41,6 @@ jobs:
           command: |
             cd azure/terraform-azure
             terraform plan
-      - run:
-          name: terraform apply
-          command: |
-            cd azure/terraform-azure
-            terraform apply -auto-approve
-      - run:
-          name: terraform destroy
-          command: |
-            cd azure/terraform-azure
-            terraform destroy -auto-approve
 
   build-publish:
     docker:
