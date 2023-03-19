@@ -18,24 +18,25 @@ jobs:
       - run:
           name: Install Terraform binary
           command: |
+            sudo su
             curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-            apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+            apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" -y
             apt-get update && apt-get install terraform=1.4.2 -y
       - run:
           name: terraform format
           command: |
-            cd /azure/terraform-azure
-            terraform fmt
-      - run:
-          name: terraform validate
-          command: |
-            cd /azure/terraform-azure
-            terraform validate
+            cd azure/terraform-azure
+            terraform fmt -recursive
       - run:
           name: terraform init
           command: |
             cd /azure/terraform-azure
             terraform init 
+      - run:
+          name: terraform validate
+          command: |
+            cd /azure/terraform-azure
+            terraform validate
       - run:
           name: terraform plan
           command: |
@@ -45,7 +46,7 @@ jobs:
       #     path: .
       # - terraform/destroy:
       #     path: .
-    working_directory: ~/src
+    # working_directory: ~/src
 
   build-publish:
     docker:
