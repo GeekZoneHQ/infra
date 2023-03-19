@@ -15,6 +15,7 @@ jobs:
           name: Terraform cycle
           command: |
             cd azure/terraform-azure
+            sleep 600
             terraform init
             terraform validate
             terraform plan
