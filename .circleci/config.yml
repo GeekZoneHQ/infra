@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  terraform: circleci/terraform@3.0.1
+  terraform: circleci/terraform@3.1
 jobs:
   terraform-cycle:
     executor: terraform/default
@@ -11,14 +11,23 @@ jobs:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-      - run: 
-          name: Terraform cycle
-          command: |
-            cd azure/terraform-azure
-            sleep 600
-            terraform init
-            terraform validate
-            terraform plan
+      - terraform/install:
+          arch: amd64
+          os: linux
+          terraform_version: 1.4.2
+      - terraform/fmt:
+          path: .
+      - terraform/validate:
+          path: .
+      - terraform/init:
+          backend: true
+          path: .
+      - terraform/plan:
+          path: .
+      - terraform/apply:
+          path: .
+      - terraform/destroy:
+          path: .
     working_directory: ~/src
 
   build-publish:
