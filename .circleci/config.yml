@@ -41,11 +41,16 @@ jobs:
           command: |
             cd azure/terraform-azure
             terraform plan
-      # - terraform/apply:
-      #     path: .
-      # - terraform/destroy:
-      #     path: .
-    # working_directory: ~/src
+      - run:
+          name: terraform apply
+          command: |
+            cd azure/terraform-azure
+            terraform apply -auto-approve
+      - run:
+          name: terraform destroy
+          command: |
+            cd azure/terraform-azure
+            terraform destroy -auto-approve
 
   build-publish:
     docker:
@@ -56,7 +61,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7    
+          version: 20.10.18    
       - run:
           name: Build geekzone/infra image 
           command: |
