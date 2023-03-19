@@ -14,7 +14,7 @@ jobs:
       - terraform/install:
           arch: amd64
           os: linux
-          terraform_version: 1.4.2
+          terraform_version: "1.4.2"
       - terraform/fmt:
           path: .
       - terraform/validate:
@@ -24,10 +24,10 @@ jobs:
           path: .
       - terraform/plan:
           path: .
-      - terraform/apply:
-          path: .
-      - terraform/destroy:
-          path: .
+      # - terraform/apply:
+      #     path: .
+      # - terraform/destroy:
+      #     path: .
     working_directory: ~/src
 
   build-publish:
