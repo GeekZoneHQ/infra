@@ -29,17 +29,17 @@ jobs:
       - run:
           name: terraform init
           command: |
-            cd /azure/terraform-azure
+            cd azure/terraform-azure
             terraform init 
       - run:
           name: terraform validate
           command: |
-            cd /azure/terraform-azure
+            cd azure/terraform-azure
             terraform validate
       - run:
           name: terraform plan
           command: |
-            cd /azure/terraform-azure
+            cd azure/terraform-azure
             terraform plan
       # - terraform/apply:
       #     path: .
