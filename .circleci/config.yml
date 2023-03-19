@@ -1,29 +1,41 @@
 version: 2.1
-orbs:
-  terraform: circleci/terraform@3.1
 jobs:
   terraform-cycle:
-    executor: terraform/default
+    docker:
+      - image: ubuntu-2004:202107-02
     steps:
       - checkout
       - run:
           name: Create .terraformrc file locally
-          command: >-
+          command: |
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-      - terraform/install:
-          arch: amd64
-          os: linux
-          terraform_version: "1.4.2"
-      - terraform/fmt:
-          path: .
-      - terraform/validate:
-          path: .
-      - terraform/init:
-          backend: true
-          path: .
-      - terraform/plan:
-          path: .
+      - run:
+          name: Install Terraform binary
+          command: |
+            curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+            apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+            apt-get update && apt-get install terraform=1.4.2 -y
+      - run:
+          name: terraform format
+          command: |
+            cd /azure/terraform-azure
+            terraform fmt
+      - run:
+          name: terraform validate
+          command: |
+            cd /azure/terraform-azure
+            terraform validate
+      - run:
+          name: terraform init
+          command: |
+            cd /azure/terraform-azure
+            terraform init 
+      - run:
+          name: terraform plan
+          command: |
+            cd /azure/terraform-azure
+            terraform plan
       # - terraform/apply:
       #     path: .
       # - terraform/destroy:
@@ -58,13 +70,13 @@ workflows:
           filters:
             branches:
               ignore: 
-              - /junk-.*/
+              - /^doc-.*/
       - build-publish:
           requires:
           - terraform-cycle
           filters:
             branches:
               ignore: 
-              - /junk-.*/
+              - /^doc-.*/
 
 
