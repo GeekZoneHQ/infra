@@ -2,9 +2,14 @@ version: 2.1
 jobs:
   terraform-cycle:
     docker:
-      - image: ubuntu-2004:202107-02
+      - image: cimg/base:current
+        auth:
+          username: $DOCKER_USERNAME
+          password: $DOCKER_PASSWORD
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.18
       - run:
           name: Create .terraformrc file locally
           command: |
