@@ -15,9 +15,10 @@ jobs:
           name: Terraform cycle
           command: |
             cd azure/terraform-azure
-            terraform init -upgrade
+            terraform init
             terraform validate
             terraform plan
+            sleep 600
     working_directory: ~/src
 
   build-publish:
