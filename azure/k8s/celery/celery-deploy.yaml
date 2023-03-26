@@ -31,7 +31,7 @@ spec:
               name: celery-broker-url
           - secretRef:
               name: celery-secrets 
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+        image: geekzone/backend:0.1.${CIRCLE_WORKFLOW_ID}
         name: celery 
         command: ["sh", "-c", "celery -A web worker -l INFO"]
         resources:
