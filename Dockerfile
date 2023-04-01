@@ -20,12 +20,16 @@ WORKDIR /usr/src/infra
 
 RUN adduser --disabled-password infra-admin
     
-COPY --chown=infra-admin:infra-admin azure . 
+COPY --chown=infra-admin:infra-admin . . 
 
-RUN mv create-azure-infra /usr/local/bin \
-    && mv deploy-test-in-azure /usr/local/bin \
-    && mv deploy-prod-in-azure /usr/local/bin \
-    && mv destroy-azure-infra /usr/local/bin
+RUN mv aws/create-aws-infra /usr/local/bin \
+    && mv aws/deploy-test-in-aws /usr/local/bin \
+    && mv aws/deploy-prod-in-aws /usr/local/bin \
+    && mv aws/destroy-aws-infra /usr/local/bin \
+    && mv azure/create-azure-infra /usr/local/bin \
+    && mv azure/deploy-test-in-azure /usr/local/bin \
+    && mv azure/deploy-prod-in-azure /usr/local/bin \
+    && mv azure/destroy-azure-infra /usr/local/bin
 
 RUN chmod -R 755 /usr/src/infra/
 
