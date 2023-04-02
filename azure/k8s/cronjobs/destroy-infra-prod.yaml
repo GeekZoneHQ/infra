@@ -4,7 +4,7 @@ metadata:
   name: destroy-azure-infra 
   namespace: infra
 spec:
-  schedule: "0/5 * * * *"
+  schedule: "* */3 * * *"
   jobTemplate:
     spec:
       template:

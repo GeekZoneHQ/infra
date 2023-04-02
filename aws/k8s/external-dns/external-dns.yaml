@@ -51,7 +51,7 @@ spec:
       serviceAccountName: external-dns
       containers:
       - name: external-dns
-        image: k8s.gcr.io/external-dns/external-dns:v0.7.6
+        image: k8s.gcr.io/external-dns/external-dns:v0.13.2
         args:
         - --source=ingress # service is also possible
         - --domain-filter=geek.zone # (optional) limit to only example.com domains; change to match the zone created above.

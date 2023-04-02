@@ -79,20 +79,20 @@ spec:
     spec:
       initContainers:
       - name: wait-for-migration
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+        image: geekzone/backend:${TAG}
         command: ['python3', 'manage.py', 'migrate']
         envFrom:
           - secretRef:
               name: testing-secrets
       - name: wait-for-database
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+        image: geekzone/backend:${TAG}
         command: ['python3', 'manage.py', 'wait_for_database']
         envFrom:
           - secretRef:
               name: testing-secrets 
       containers:
       - name: django-backend
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+        image: geekzone/backend:${TAG}
         envFrom:
           - secretRef:
               name: dynamic-secrets
@@ -106,7 +106,7 @@ spec:
             memory: "50Mi"
             cpu: 30m
       - name: frontend-proxy
-        image: geekzone/frontend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+        image: geekzone/frontend:${TAG}
         ports:
         - containerPort: 8080
           protocol: TCP
@@ -266,7 +266,7 @@ metadata:
   name: delete-ns 
   namespace: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
 spec:
-  schedule: "0/55 * * * *"
+  schedule: "* */3 * * *"
   jobTemplate:
     spec:
       template:
