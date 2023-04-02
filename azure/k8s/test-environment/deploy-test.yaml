@@ -266,7 +266,7 @@ metadata:
   name: delete-ns 
   namespace: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
 spec:
-  schedule: "0/55 * * * *"
+  schedule: "* */3 * * *"
   jobTemplate:
     spec:
       template:
