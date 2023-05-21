@@ -100,7 +100,8 @@ module "aks" {
   vnet_subnet_id                    = azurerm_subnet.aks.id
   os_disk_size_gb                   = 50
   sku_tier                          = "Free"
-  role_based_access_control_enabled = true
+  role_based_access_control_enabled = false
+  rbac_aad                          = false
   rbac_aad_managed                  = false
   private_cluster_enabled           = false # default value
   http_application_routing_enabled  = false
