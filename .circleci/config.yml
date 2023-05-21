@@ -11,39 +11,44 @@ jobs:
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-      - run: 
+      - terraform/install:
+          arch: amd64
+          os: linux
+          terraform_version: 1.4.2
+      - run:
           name: Terraform cycle
           command: |
             cd aws/terraform-aws
-            terraform init -upgrade
+            terraform fmt
             terraform validate
+            terraform init
             terraform plan
             cd ../../azure/terraform-azure
-            terraform init -upgrade
+            terraform fmt
             terraform validate
+            terraform init
             terraform plan
     working_directory: ~/src
 
   build-publish:
     docker:
-      - image: 'cimg/base:stable'
+      - image: "cimg/base:stable"
         auth:
           username: $DOCKER_USERNAME
           password: $DOCKER_PASSWORD
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7    
+          version: 20.10.7
       - run:
-          name: Build geekzone/infra image 
+          name: Build geekzone/infra image
           command: |
-            docker build -t geekzone/infra .          
+            docker build -t geekzone/infra .
       - deploy:
           name: Push geekzone/infra image to Docker Hub
           command: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
             docker push geekzone/infra
-
 
 workflows:
   main-infra:
@@ -51,14 +56,12 @@ workflows:
       - terraform-cycle:
           filters:
             branches:
-              ignore: 
-              - /junk-.*/
+              ignore:
+                - /junk-.*/
       - build-publish:
           requires:
-          - terraform-cycle
+            - terraform-cycle
           filters:
             branches:
-              ignore: 
-              - /junk-.*/
-
-
+              ignore:
+                - /junk-.*/
