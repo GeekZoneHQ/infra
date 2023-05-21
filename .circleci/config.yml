@@ -12,7 +12,7 @@ jobs:
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
       - terraform/install:
-          arch: amd64
+          arch: x86_64
           os: linux
           terraform_version: 1.4.2
       - run:
