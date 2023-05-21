@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   terraform-cycle:
     docker:
-      - image: "ubuntu-2004:202107-02"
+      - image: "cimg/base:stable"
     steps:
       - checkout
       - setup_remote_docker:
