@@ -1,20 +1,23 @@
 version: 2.1
-orbs:
-  terraform: circleci/terraform@3.0.1
 jobs:
   terraform-cycle:
-    executor: terraform/default
+    docker:
+      - image: "cimg/base:stable"
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.7
       - run:
           name: Create .terraformrc file locally
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-      - terraform/install:
-          arch: "x86_64"
-          os: linux
-          terraform_version: 1.4.2
+      - run:
+          name: Install Terraform cli
+          command: |
+            wget https://releases.hashicorp.com/terraform/1.4.2/terraform_1.4.2_linux_386.zip
+            unzip terraform_1.4.2_linux_386.zip
+            sudo mv terraform /usr/local/bin
       - run:
           name: Terraform cycle
           command: |
