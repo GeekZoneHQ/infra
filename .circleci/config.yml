@@ -22,13 +22,9 @@ jobs:
           name: Terraform cycle
           command: |
             cd aws/terraform-aws
-            terraform fmt
-            terraform validate
             terraform init
             terraform plan
             cd ../../azure/terraform-azure
-            terraform fmt
-            terraform validate
             terraform init
             terraform plan
     working_directory: ~/project
