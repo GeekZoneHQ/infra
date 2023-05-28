@@ -92,14 +92,14 @@ module "aks" {
   resource_group_name               = azurerm_resource_group.geekzone.name
   client_id                         = var.client_id
   client_secret                     = var.client_secret
-  kubernetes_version                = "1.26.3"
-  orchestrator_version              = "1.26.3"
+  kubernetes_version                = var.kubernetes_version
+  orchestrator_version              = var.orchestrator_version
   prefix                            = "prefix"
   cluster_name                      = "GeekZoneCluster"
   network_plugin                    = "azure"
   vnet_subnet_id                    = azurerm_subnet.aks.id
   os_disk_size_gb                   = 50
-  sku_tier                          = "Free"
+  sku_tier                          = "Standard"
   role_based_access_control_enabled = false
   rbac_aad                          = false
   rbac_aad_managed                  = false

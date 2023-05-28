@@ -10,9 +10,6 @@ variable "tenant_id" {
 variable "subscription_id" {
 }
 
-variable "ssh_key" {
-}
-
 variable "administrator_login" {
 }
 
@@ -24,5 +21,9 @@ variable "location" {
 }
 
 variable "kubernetes_version" {
-  default = "1.21.7"
+  default = "1.26.3"
+}
+
+variable "orchestrator_version" {
+  default = "1.26.3"
 }
