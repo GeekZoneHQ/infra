@@ -1,24 +1,18 @@
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
+  cloud {
     organization = "geekzone"
+    hostname     = "app.terraform.io" # Optional; defaults to app.terraform.io
     workspaces {
-      name = "dev-azure"
-    }
-  }
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "3.57.0"
+      name = "Azure"
     }
   }
 }
 
 provider "azurerm" {
-  subscription_id = var.subscription_id
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  tenant_id       = var.tenant_id
+  subscription_id = var.ARM_SUBSCRIPTION_ID
+  client_id       = var.ARM_CLIENT_ID
+  client_secret   = var.ARM_CLIENT_SECRET
+  tenant_id       = var.ARM_TENANT_ID
 
   features {}
 }
@@ -90,8 +84,8 @@ resource "azurerm_subnet" "endpoint" {
 module "aks" {
   source                            = "Azure/aks/azurerm"
   resource_group_name               = azurerm_resource_group.geekzone.name
-  client_id                         = var.client_id
-  client_secret                     = var.client_secret
+  client_id                         = var.ARM_CLIENT_ID
+  client_secret                     = var.ARM_CLIENT_SECRET
   kubernetes_version                = var.kubernetes_version
   orchestrator_version              = var.orchestrator_version
   prefix                            = "prefix"
