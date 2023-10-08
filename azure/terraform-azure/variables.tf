@@ -11,11 +11,9 @@ variable "ARM_SUBSCRIPTION_ID" {
 }
 
 variable "administrator_login" {
-  default = "postgres"
 }
 
 variable "administrator_login_password" {
-  default = "Yqp&@^vBeeM8ZiggS$ez"
 }
 
 variable "location" {
