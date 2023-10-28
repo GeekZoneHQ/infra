@@ -78,55 +78,55 @@ spec:
         app: gz-web
     spec:
       initContainers:
-      - name: wait-for-migration
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
-        command: ['python3', 'manage.py', 'migrate']
-        envFrom:
-          - secretRef:
-              name: testing-secrets
-      - name: wait-for-database
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
-        command: ['python3', 'manage.py', 'wait_for_database']
-        envFrom:
-          - secretRef:
-              name: testing-secrets 
+        - name: wait-for-migration
+          image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+          command: ["python3", "manage.py", "migrate"]
+          envFrom:
+            - secretRef:
+                name: testing-secrets
+        - name: wait-for-database
+          image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+          command: ["python3", "manage.py", "wait_for_database"]
+          envFrom:
+            - secretRef:
+                name: testing-secrets
       containers:
-      - name: django-backend
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
-        envFrom:
-          - secretRef:
-              name: dynamic-secrets
-          - secretRef:
-              name: testing-secrets
-        resources:
-          limits:
-            memory: "100Mi"
-            cpu: 50m
-          requests:
-            memory: "50Mi"
-            cpu: 30m
-      - name: frontend-proxy
-        image: geekzone/frontend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
-        ports:
-        - containerPort: 8080
-          protocol: TCP
-        readinessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 20
-        resources:
-          limits:
-            memory: "50Mi"
-            cpu: 50m
-          requests:
-            memory: "30Mi"
-            cpu: 30m
+        - name: django-backend
+          image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+          envFrom:
+            - secretRef:
+                name: dynamic-secrets
+            - secretRef:
+                name: testing-secrets
+          resources:
+            limits:
+              memory: "100Mi"
+              cpu: 50m
+            requests:
+              memory: "50Mi"
+              cpu: 30m
+        - name: frontend-proxy
+          image: geekzone/frontend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            limits:
+              memory: "50Mi"
+              cpu: 50m
+            requests:
+              memory: "30Mi"
+              cpu: 30m
 
 ---
 apiVersion: v1
@@ -142,8 +142,8 @@ spec:
   selector:
     app: gz-web
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -152,22 +152,22 @@ metadata:
   name: ingress-gz-web
   namespace: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
   annotations:
-    nginx.ingress.kubernetes.io/app-root: /memberships/register 
+    nginx.ingress.kubernetes.io/app-root: /memberships/register
 spec:
   tls:
-  - hosts:
-    - "${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}-test.geek.zone"
-  rules: 
-  - host: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}-test.geek.zone
-    http:
-      paths:
-      - path: /
-        pathType: Prefix          
-        backend:
-          service:
-            name: test-gz-web  
-            port: 
-              number: 80
+    - hosts:
+        - "${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}-test.geek.zone"
+  rules:
+    - host: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}-test.geek.zone
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: test-gz-web
+                port:
+                  number: 80
   ingressClassName: nginx
 
 ---
@@ -185,7 +185,7 @@ spec:
   template:
     metadata:
       labels:
-       name: postgres
+        name: postgres
     spec:
       containers:
         - name: postgres
@@ -193,8 +193,8 @@ spec:
           ports:
             - containerPort: 5432
           envFrom:
-          - secretRef:
-              name: testing-postgres-secrets
+            - secretRef:
+                name: testing-postgres-secrets
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql
@@ -235,14 +235,14 @@ metadata:
   name: delete-ns
   namespace: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - create
-  - watch
-  - delete
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - create
+      - watch
+      - delete
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -255,26 +255,32 @@ roleRef:
   kind: Role
   name: delete-ns
 subjects:
-- kind: ServiceAccount
-  name: delete-ns
-  namespace: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
+  - kind: ServiceAccount
+    name: delete-ns
+    namespace: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
 
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: delete-ns 
+  name: delete-ns
   namespace: ${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}
 spec:
-  schedule: "0/55 * * * *"
+  schedule: "0 */3 * * *"
   jobTemplate:
     spec:
       template:
         spec:
-          serviceAccountName: delete-ns 
+          serviceAccountName: delete-ns
           containers:
-          - name: delete-ns
-            image: geekzone/infra
-            imagePullPolicy: IfNotPresent
-            command: ["kubectl", "delete", "ns", "${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}"]
+            - name: delete-ns
+              image: geekzone/infra
+              imagePullPolicy: IfNotPresent
+              command:
+                [
+                  "kubectl",
+                  "delete",
+                  "ns",
+                  "${PR_NUMBER}-${CIRCLE_PROJECT_REPONAME}",
+                ]
           restartPolicy: OnFailure
