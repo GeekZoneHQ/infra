@@ -1,19 +1,18 @@
 terraform {
-  backend "remote" {
-    hostname     = "app.terraform.io"
+  cloud {
     organization = "geekzone"
-
+    hostname     = "app.terraform.io" # Optional; defaults to app.terraform.io
     workspaces {
-      name = "dev-azure"
+      name = "Azure"
     }
   }
 }
 
 provider "azurerm" {
-  subscription_id = var.subscription_id
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  tenant_id       = var.tenant_id
+  subscription_id = var.ARM_SUBSCRIPTION_ID
+  client_id       = var.ARM_CLIENT_ID
+  client_secret   = var.ARM_CLIENT_SECRET
+  tenant_id       = var.ARM_TENANT_ID
 
   features {}
 }
@@ -78,48 +77,47 @@ resource "azurerm_subnet" "endpoint" {
   virtual_network_name = azurerm_virtual_network.geekzone.name
   address_prefixes     = ["10.10.3.0/24"]
 
-  enforce_private_link_endpoint_network_policies = true
+  private_endpoint_network_policies_enabled = true
 
 }
 
 module "aks" {
-  source                           = "Azure/aks/azurerm"
-  resource_group_name              = azurerm_resource_group.geekzone.name
-  client_id                        = var.client_id
-  client_secret                    = var.client_secret
-  kubernetes_version               = "1.21.7"
-  orchestrator_version             = "1.21.7"
-  prefix                           = "prefix"
-  cluster_name                     = "GeekZoneCluster"
-  network_plugin                   = "azure"
-  vnet_subnet_id                   = azurerm_subnet.aks.id
-  os_disk_size_gb                  = 50
-  sku_tier                         = "Paid" # defaults to Free
-  enable_role_based_access_control = false
-  rbac_aad_managed                 = false
-  private_cluster_enabled          = false # default value
-  enable_http_application_routing  = false
-  enable_azure_policy              = true
-  enable_auto_scaling              = true
-  enable_host_encryption           = false
-  agents_min_count                 = 1
-  agents_max_count                 = 2
-  agents_count                     = null # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
-  agents_max_pods                  = 100
-  agents_pool_name                 = "geekzone"
-  agents_availability_zones        = ["1", "2", "3"]
-  agents_type                      = "VirtualMachineScaleSets"
+  source                            = "Azure/aks/azurerm"
+  resource_group_name               = azurerm_resource_group.geekzone.name
+  client_id                         = var.ARM_CLIENT_ID
+  client_secret                     = var.ARM_CLIENT_SECRET
+  kubernetes_version                = var.kubernetes_version
+  orchestrator_version              = var.orchestrator_version
+  prefix                            = "prefix"
+  cluster_name                      = "GeekZoneCluster"
+  network_plugin                    = "azure"
+  vnet_subnet_id                    = azurerm_subnet.aks.id
+  os_disk_size_gb                   = 50
+  sku_tier                          = "Standard"
+  role_based_access_control_enabled = false
+  rbac_aad                          = false
+  rbac_aad_managed                  = false
+  private_cluster_enabled           = false # default value
+  http_application_routing_enabled  = false
+  azure_policy_enabled              = true
+  public_network_access_enabled     = false
+  enable_auto_scaling               = true
+  enable_host_encryption            = false
+  agents_min_count                  = 1
+  agents_max_count                  = 2
+  agents_count                      = null # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
+  agents_max_pods                   = 100
+  agents_pool_name                  = "geekzone"
+  agents_availability_zones         = ["1", "2", "3"]
+  agents_type                       = "VirtualMachineScaleSets"
 
   agents_tags = {
     "env" : "prod"
   }
 
-  enable_ingress_application_gateway = false
-
-  network_policy                 = "azure"
-  net_profile_dns_service_ip     = "10.0.0.10"
-  net_profile_docker_bridge_cidr = "170.10.0.1/16"
-  net_profile_service_cidr       = "10.0.0.0/16"
+  network_policy             = "azure"
+  net_profile_dns_service_ip = "10.0.0.10"
+  net_profile_service_cidr   = "10.0.0.0/16"
 
   depends_on = [azurerm_resource_group.geekzone, resource.azurerm_virtual_network.geekzone]
 }

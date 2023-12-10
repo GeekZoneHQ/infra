@@ -1,49 +1,55 @@
 version: 2.1
-orbs:
-  terraform: circleci/terraform@3.0.1
 jobs:
   terraform-cycle:
-    executor: terraform/default
+    docker:
+      - image: "cimg/base:stable"
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.7
       - run:
           name: Create .terraformrc file locally
           command: >-
             echo "credentials \"app.terraform.io\" {token =
             \"$TERRAFORM_TOKEN\"}" > $HOME/.terraformrc
-      - run: 
+      - run:
+          name: Install Terraform cli
+          command: |
+            wget https://releases.hashicorp.com/terraform/1.4.2/terraform_1.4.2_linux_386.zip
+            unzip terraform_1.4.2_linux_386.zip
+            sudo mv terraform /usr/local/bin
+      - run:
           name: Terraform cycle
           command: |
             cd aws/terraform-aws
-            terraform init -upgrade
-            terraform validate
+            terraform init
             terraform plan
             cd ../../azure/terraform-azure
-            terraform init -upgrade
-            terraform validate
+            terraform init
             terraform plan
-    working_directory: ~/src
+    working_directory: ~/project
 
   build-publish:
     docker:
-      - image: 'cimg/base:stable'
+      - image: "cimg/base:stable"
         auth:
           username: $DOCKER_USERNAME
           password: $DOCKER_PASSWORD
+    environment:
+      TAG: 0.1.<< pipeline.number >>
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7    
+          version: 20.10.7
       - run:
-          name: Build geekzone/infra image 
+          name: Build geekzone/infra image
           command: |
-            docker build -t geekzone/infra .          
+            docker build -t geekzone/infra:$TAG .
       - deploy:
           name: Push geekzone/infra image to Docker Hub
           command: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            docker push geekzone/infra
-
+            docker push geekzone/infra:$TAG
 
 workflows:
   main-infra:
@@ -51,14 +57,12 @@ workflows:
       - terraform-cycle:
           filters:
             branches:
-              ignore: 
-              - /junk-.*/
+              ignore:
+                - /junk-.*/
       - build-publish:
           requires:
-          - terraform-cycle
+            - terraform-cycle
           filters:
             branches:
-              ignore: 
-              - /junk-.*/
-
-
+              ignore:
+                - /junk-.*/
