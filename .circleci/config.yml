@@ -35,6 +35,8 @@ jobs:
         auth:
           username: $DOCKER_USERNAME
           password: $DOCKER_PASSWORD
+    environment:
+      TAG: 0.1.<< pipeline.number >>
     steps:
       - checkout
       - setup_remote_docker:
@@ -42,12 +44,12 @@ jobs:
       - run:
           name: Build geekzone/infra image
           command: |
-            docker build -t geekzone/infra .
+            docker build -t geekzone/infra:$TAG .
       - deploy:
           name: Push geekzone/infra image to Docker Hub
           command: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            docker push geekzone/infra
+            docker push geekzone/infra:$TAG
 
 workflows:
   main-infra:
