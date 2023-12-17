@@ -1,5 +1,5 @@
 apiVersion: v1
-stringData: 
+stringData:
   CELERY_BROKER_URL: ${CELERY_BROKER_URL}
 kind: Secret
 metadata:
@@ -26,18 +26,18 @@ spec:
         app: celery
     spec:
       containers:
-      - envFrom:
-          - secretRef:
-              name: celery-broker-url
-          - secretRef:
-              name: celery-secrets 
-        image: geekzone/backend:0.1.${CIRCLE_PREVIOUS_BUILD_NUM}
-        name: celery 
-        command: ["sh", "-c", "celery -A web worker -l INFO"]
-        resources:
-          limits:
-            memory: "200Mi"
-            cpu: 50m
-          requests:
-            memory: "50Mi"
-            cpu: 30m
+        - envFrom:
+            - secretRef:
+                name: celery-broker-url
+            - secretRef:
+                name: celery-secrets
+          image: geekzone/backend:0.1.$TAG
+          name: celery
+          command: ["sh", "-c", "celery -A web worker -l INFO"]
+          resources:
+            limits:
+              memory: "200Mi"
+              cpu: 50m
+            requests:
+              memory: "50Mi"
+              cpu: 30m
