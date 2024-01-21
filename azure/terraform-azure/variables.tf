@@ -1,3 +1,7 @@
+variable "cluster_name" {
+  default = "GeekZoneCluster"
+}
+
 variable "ARM_CLIENT_ID" {
 }
 

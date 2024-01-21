@@ -1,7 +1,7 @@
 terraform {
   cloud {
     organization = "geekzone"
-    hostname     = "app.terraform.io" # Optional; defaults to app.terraform.io
+    hostname     = "app.terraform.io"
     workspaces {
       name = "Azure"
     }
@@ -36,6 +36,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "geekzone" {
     azurerm_resource_group.geekzone,
     azurerm_virtual_network.geekzone,
     azurerm_private_dns_zone.geekzone,
+    azurerm_subnet.database
   ]
 }
 
@@ -46,6 +47,24 @@ resource "azurerm_virtual_network" "geekzone" {
   resource_group_name = azurerm_resource_group.geekzone.name
 }
 
+resource "azurerm_network_security_group" "database" {
+  name                = "geekzone-nsg"
+  location            = azurerm_resource_group.geekzone.location
+  resource_group_name = azurerm_resource_group.geekzone.name
+
+  security_rule {
+    name                       = "allow-all-tcp-inbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+    destination_address_prefix = "VirtualNetwork"
+  }
+}
+
 resource "azurerm_subnet" "aks" {
   name                 = "k8s-cluster"
   resource_group_name  = azurerm_resource_group.geekzone.name
@@ -54,21 +73,25 @@ resource "azurerm_subnet" "aks" {
 
 }
 
+
 resource "azurerm_subnet" "database" {
   name                 = "postgres"
   resource_group_name  = azurerm_resource_group.geekzone.name
   virtual_network_name = azurerm_virtual_network.geekzone.name
   address_prefixes     = ["10.10.2.0/24"]
-  service_endpoints    = ["Microsoft.Sql"]
+  service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage"]
   delegation {
-    name = "geekzone"
-
+    name = "fs"
     service_delegation {
-      name    = "Microsoft.DBforPostgreSQL/singleServers"
+      name    = "Microsoft.DBforPostgreSQL/flexibleServers"
       actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
     }
   }
+}
 
+resource "azurerm_subnet_network_security_group_association" "database" {
+  subnet_id                 = azurerm_subnet.database.id
+  network_security_group_id = azurerm_network_security_group.database.id
 }
 
 resource "azurerm_subnet" "endpoint" {
@@ -89,7 +112,7 @@ module "aks" {
   kubernetes_version                = var.kubernetes_version
   orchestrator_version              = var.orchestrator_version
   prefix                            = "prefix"
-  cluster_name                      = "GeekZoneCluster"
+  cluster_name                      = var.cluster_name
   network_plugin                    = "azure"
   vnet_subnet_id                    = azurerm_subnet.aks.id
   os_disk_size_gb                   = 50
@@ -122,57 +145,30 @@ module "aks" {
   depends_on = [azurerm_resource_group.geekzone, resource.azurerm_virtual_network.geekzone]
 }
 
-resource "azurerm_postgresql_server" "geekzone" {
-  name                         = "geekzone"
-  location                     = azurerm_resource_group.geekzone.location
-  resource_group_name          = azurerm_resource_group.geekzone.name
-  sku_name                     = "GP_Gen5_2"
-  storage_mb                   = 10240
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = false
-  auto_grow_enabled            = true
-
-  administrator_login              = var.administrator_login
-  administrator_login_password     = var.administrator_login_password
-  version                          = "11"
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2"
-  public_network_access_enabled    = false
-  tags = {
-    "env" = "prod"
-  }
-
-}
-
-resource "azurerm_postgresql_database" "geekzone" {
+resource "azurerm_postgresql_flexible_server" "geekzone" {
   name                = "geekzone"
   resource_group_name = azurerm_resource_group.geekzone.name
-  server_name         = azurerm_postgresql_server.geekzone.name
-  charset             = "UTF8"
-  collation           = "English_United States.1252"
+  location            = azurerm_resource_group.geekzone.location
+  version             = "15"
+  delegated_subnet_id = azurerm_subnet.database.id
+  private_dns_zone_id = azurerm_private_dns_zone.geekzone.id
+  authentication {
+    active_directory_auth_enabled = false
+    password_auth_enabled         = true
+  }
+  administrator_login    = var.administrator_login
+  administrator_password = var.administrator_login_password
+  zone                   = "1"
+  storage_mb             = 32768
+  backup_retention_days  = 7
+  sku_name               = "GP_Standard_D2s_v3"
+  depends_on             = [azurerm_private_dns_zone_virtual_network_link.geekzone]
 
-  depends_on = [
-    azurerm_resource_group.geekzone,
-    resource.azurerm_virtual_network.geekzone,
-  ]
 }
 
-resource "azurerm_private_endpoint" "geekzone" {
-  name                = "geekzone-endpoint"
-  location            = azurerm_resource_group.geekzone.location
-  resource_group_name = azurerm_resource_group.geekzone.name
-  subnet_id           = azurerm_subnet.endpoint.id
-
-  private_dns_zone_group {
-    name                 = "geekzone-private-dns-zone-group"
-    private_dns_zone_ids = [azurerm_private_dns_zone.geekzone.id]
-  }
-
-  private_service_connection {
-    name                           = "geekzone-privateserviceconnection"
-    private_connection_resource_id = azurerm_postgresql_server.geekzone.id
-    subresource_names              = ["postgresqlServer"]
-    is_manual_connection           = false
-  }
-
+resource "azurerm_postgresql_flexible_server_database" "geekzone" {
+  name      = "geekzone"
+  server_id = azurerm_postgresql_flexible_server.geekzone.id
+  collation = "en_US.utf8"
+  charset   = "UTF8"
 }
