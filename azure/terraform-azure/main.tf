@@ -106,6 +106,7 @@ resource "azurerm_subnet" "endpoint" {
 
 module "aks" {
   source                            = "Azure/aks/azurerm"
+  version                           = "7.4.0"
   resource_group_name               = azurerm_resource_group.geekzone.name
   client_id                         = var.ARM_CLIENT_ID
   client_secret                     = var.ARM_CLIENT_SECRET
@@ -120,7 +121,7 @@ module "aks" {
   role_based_access_control_enabled = false
   rbac_aad                          = false
   rbac_aad_managed                  = false
-  private_cluster_enabled           = false # default value
+  private_cluster_enabled           = false
   http_application_routing_enabled  = false
   azure_policy_enabled              = true
   public_network_access_enabled     = false

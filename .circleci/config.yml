@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7
+          version: default
       - run:
           name: Create .terraformrc file locally
           command: >-
@@ -15,8 +15,8 @@ jobs:
       - run:
           name: Install Terraform cli
           command: |
-            wget https://releases.hashicorp.com/terraform/1.4.2/terraform_1.4.2_linux_386.zip
-            unzip terraform_1.4.2_linux_386.zip
+            wget https://releases.hashicorp.com/terraform/1.8.2/terraform_1.8.2_linux_386.zip
+            unzip terraform_1.8.2_linux_386.zip
             sudo mv terraform /usr/local/bin
       - run:
           name: Terraform cycle
@@ -37,12 +37,12 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.7
+          version: default
       - run:
           name: Build geekzone/infra image
           command: |
             docker build -t geekzone/infra:$TAG .
-      - deploy:
+      - run:
           name: Push geekzone/infra image to Docker Hub
           command: |
             docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
