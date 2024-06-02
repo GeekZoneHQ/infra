@@ -6,13 +6,29 @@ terraform {
       name = "Azure"
     }
   }
+  required_providers {
+    hcp = {
+      source  = "hashicorp/hcp"
+      version = "0.90.0"
+    }
+  }
+}
+
+provider "hcp" {
+  client_id     = var.HCP_CLIENT_ID
+  client_secret = var.HCP_CLIENT_SECRET
+  project_id    = "f8647d4c-9bf3-44d0-8c84-18a5ab9ee572"
+}
+
+data "hcp_vault_secrets_app" "infra" {
+  app_name = "infra-secrets"
 }
 
 provider "azurerm" {
-  subscription_id = var.ARM_SUBSCRIPTION_ID
-  client_id       = var.ARM_CLIENT_ID
-  client_secret   = var.ARM_CLIENT_SECRET
-  tenant_id       = var.ARM_TENANT_ID
+  subscription_id = data.hcp_vault_secrets_secret.subscription_id.secret_value
+  client_id       = data.hcp_vault_secrets_secret.azure_client_id.secret_value
+  client_secret   = data.hcp_vault_secrets_secret.azure_client_password.secret_value
+  tenant_id       = data.hcp_vault_secrets_secret.tenant_id.secret_value
 
   features {}
 }
@@ -108,8 +124,8 @@ module "aks" {
   source                            = "Azure/aks/azurerm"
   version                           = "7.4.0"
   resource_group_name               = azurerm_resource_group.geekzone.name
-  client_id                         = var.ARM_CLIENT_ID
-  client_secret                     = var.ARM_CLIENT_SECRET
+  client_id                         = data.hcp_vault_secrets_secret.azure_client_id.secret_value
+  client_secret                     = data.hcp_vault_secrets_secret.azure_client_password.secret_value
   kubernetes_version                = var.kubernetes_version
   orchestrator_version              = var.orchestrator_version
   prefix                            = "prefix"
