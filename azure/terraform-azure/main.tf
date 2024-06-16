@@ -116,13 +116,13 @@ resource "azurerm_subnet" "endpoint" {
   virtual_network_name = azurerm_virtual_network.geekzone.name
   address_prefixes     = ["10.10.3.0/24"]
 
-  private_endpoint_network_policies_enabled = true
+  private_endpoint_network_policies = "Enabled"
 
 }
 
 module "aks" {
   source                            = "Azure/aks/azurerm"
-  version                           = "7.4.0"
+  version                           = "9.0.0"
   resource_group_name               = azurerm_resource_group.geekzone.name
   client_id                         = data.hcp_vault_secrets_secret.azure_client_id.secret_value
   client_secret                     = data.hcp_vault_secrets_secret.azure_client_password.secret_value
@@ -138,9 +138,7 @@ module "aks" {
   rbac_aad                          = false
   rbac_aad_managed                  = false
   private_cluster_enabled           = false
-  http_application_routing_enabled  = false
   azure_policy_enabled              = true
-  public_network_access_enabled     = false
   enable_auto_scaling               = true
   enable_host_encryption            = false
   agents_min_count                  = 1
@@ -163,12 +161,13 @@ module "aks" {
 }
 
 resource "azurerm_postgresql_flexible_server" "geekzone" {
-  name                = "geekzone"
-  resource_group_name = azurerm_resource_group.geekzone.name
-  location            = azurerm_resource_group.geekzone.location
-  version             = "15"
-  delegated_subnet_id = azurerm_subnet.database.id
-  private_dns_zone_id = azurerm_private_dns_zone.geekzone.id
+  name                          = "geekzone"
+  resource_group_name           = azurerm_resource_group.geekzone.name
+  location                      = azurerm_resource_group.geekzone.location
+  version                       = "15"
+  delegated_subnet_id           = azurerm_subnet.database.id
+  private_dns_zone_id           = azurerm_private_dns_zone.geekzone.id
+  public_network_access_enabled = false
   authentication {
     active_directory_auth_enabled = false
     password_auth_enabled         = true

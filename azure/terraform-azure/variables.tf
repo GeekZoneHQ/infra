@@ -19,9 +19,9 @@ variable "location" {
 }
 
 variable "kubernetes_version" {
-  default = "1.27.7"
+  default = "1.29.4"
 }
 
 variable "orchestrator_version" {
-  default = "1.27.7"
+  default = "1.29.4"
 }
