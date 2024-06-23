@@ -1,5 +1,16 @@
+# data "hcp_iam_policy" "infra" {
+#   bindings = [
+#     {
+#       role = "roles/secrets.app-secret-reader"
+#       principals = [
+#         data.hcp_service_principal.infra_reader
+#       ]
+#     }
+#   ]
+# }
+
 resource "hcp_service_principal" "infra_reader" {
-  name = "infra-reader"
+  name = "secret-reader"
 }
 
 resource "hcp_vault_secrets_app_iam_binding" "infra_reader" {
@@ -43,3 +54,7 @@ data "hcp_vault_secrets_secret" "terraform_token" {
   secret_name = "terraform_token"
 }
 
+# resource "hcp_vault_secrets_app_iam_policy" "infra" {
+#   resource_name = data.hcp_vault_secrets_app.infra.app_name
+#   policy_data   = data.hcp_iam_policy.infra.policy_data
+# }
