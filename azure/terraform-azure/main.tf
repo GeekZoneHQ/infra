@@ -17,11 +17,11 @@ terraform {
 provider "hcp" {
   client_id     = var.HCP_CLIENT_ID
   client_secret = var.HCP_CLIENT_SECRET
-  project_id    = "f8647d4c-9bf3-44d0-8c84-18a5ab9ee572"
+  project_id    = var.project_id
 }
 
 data "hcp_vault_secrets_app" "infra" {
-  app_name = "infra-secrets"
+  app_name = "infra"
 }
 
 provider "azurerm" {
